@@ -3,56 +3,271 @@ package shiver.me.timbers;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.emptyMap;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class WrappedHighlighterTest {
 
-    private static class TestHighlighter implements Highlighter {
+    private static final Map<String, Highlight> EMPTY_MAP = emptyMap();
+    private static final String TEXT = "this is a test";
+
+    private Highlighter mockHighlighter;
+    private Map<String, Highlight> map;
+    private List<Highlight> list;
+    private InputStream stream;
+
+    @Before
+    public void setUp() {
+
+        mockHighlighter = mock(Highlighter.class);
+        map = spy(new HashMap<String, Highlight>());
+        list = new ArrayList<Highlight>() {{
+            add(new TestHighlight("one"));
+            add(new TestHighlight("two"));
+            add(new TestHighlight("three"));
+        }};
+        stream = mock(InputStream.class);
+    }
+
+    @Test
+    public void testCreate() {
+
+        new WrappedHighlighter(mock(Highlighter.class), map);
+    }
+
+    @Test
+    public void testCreateWithList() {
+
+        new WrappedHighlighter(mock(Highlighter.class), map);
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testCreateWithNullHighlighter() {
+
+        new WrappedHighlighter(null, map);
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testCreateWithNullMap() {
+
+        new WrappedHighlighter(mockHighlighter, (Map<String, Highlight>) null);
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testCreateWithNullList() {
+
+        new WrappedHighlighter(mockHighlighter, (List<Highlight>) null);
+    }
+
+    @Test
+    public void testHighlightWithInputStreamAndMap() {
+
+        final WrappedHighlighter highlighter = new WrappedHighlighter(mockHighlighter, EMPTY_MAP);
+
+        highlighter.highlight(stream, map);
+
+        verify(mockHighlighter, times(1)).highlight(stream, map);
+    }
+
+    @Test
+    public void testHighlightWithNullInputStreamAndMap() {
+
+        final WrappedHighlighter highlighter = new WrappedHighlighter(mockHighlighter, EMPTY_MAP);
+
+        highlighter.highlight((InputStream) null, map);
+
+        verify(mockHighlighter, times(1)).highlight(null, map);
+    }
+
+    @Test
+    public void testHighlightWithInputStreamAndNullMap() {
+
+        final WrappedHighlighter highlighter = new WrappedHighlighter(mockHighlighter, EMPTY_MAP);
+
+        highlighter.highlight(stream, null);
+
+        verify(mockHighlighter, times(1)).highlight(stream, null);
+    }
+
+    @Test
+    public void testHighlightWithStringAndMap() {
+
+        final WrappedHighlighter highlighter = new WrappedHighlighter(mockHighlighter, EMPTY_MAP);
+
+        when(mockHighlighter.highlight(any(InputStream.class), eq(map))).then(new VerifyString(TEXT));
+
+        highlighter.highlight(TEXT, map);
+
+        verify(mockHighlighter, times(1)).highlight(any(InputStream.class), eq(map));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testHighlightWithNullStringAndMap() {
+
+        final WrappedHighlighter highlighter = new WrappedHighlighter(mockHighlighter, EMPTY_MAP);
+
+        highlighter.highlight((String) null, map);
+    }
+
+    @Test
+    public void testHighlightWithStringAndNullMap() {
+
+        final WrappedHighlighter highlighter = new WrappedHighlighter(mockHighlighter, map);
+
+        highlighter.highlight(TEXT, null);
+
+        verify(mockHighlighter, times(1)).highlight(any(InputStream.class), eq((Map<String, Highlight>) null));
+    }
+
+    @Test
+    public void testHighlighterWithMapAndInputStream() {
+
+        final WrappedHighlighter highlighter = new WrappedHighlighter(mockHighlighter, map);
+
+        highlighter.highlight(stream);
+
+        verify(mockHighlighter, times(1)).highlight(stream, map);
+    }
+
+    @Test
+    public void testHighlighterWithMapAndNullInputStream() {
+
+        final WrappedHighlighter highlighter = new WrappedHighlighter(mockHighlighter, map);
+
+        highlighter.highlight((InputStream) null);
+
+        verify(mockHighlighter, times(1)).highlight(null, map);
+    }
+
+    @Test
+    public void testHighlighterWithMapAndString() {
+
+        final WrappedHighlighter highlighter = new WrappedHighlighter(mockHighlighter, map);
+
+        when(mockHighlighter.highlight(any(InputStream.class), eq(map))).then(new VerifyString(TEXT));
+
+        highlighter.highlight(TEXT);
+
+        verify(mockHighlighter, times(1)).highlight(any(InputStream.class), eq(map));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testHighlighterWithMapAndNullString() {
+
+        final WrappedHighlighter highlighter = new WrappedHighlighter(mockHighlighter, map);
+
+        highlighter.highlight((String) null);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testHighlighterWithListAndInputStream() {
+
+        final WrappedHighlighter highlighter = new WrappedHighlighter(mockHighlighter, list);
+
+        when(mockHighlighter.highlight(eq(stream), any(Map.class))).then(new Answer<Void>() {
+
+            @Override
+            public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
+
+                assertThat("the list items are contained in the map.",
+                        ((Map<String, Highlight>) invocationOnMock.getArguments()[1]).values(),
+                        hasItems(list.toArray(new Highlight[list.size()]))
+                );
+
+                return null;
+            }
+        });
+
+        highlighter.highlight(stream);
+
+        verify(mockHighlighter, times(1)).highlight(any(InputStream.class), any(Map.class));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testHighlighterWithListAndNullInputStream() {
+
+        final WrappedHighlighter highlighter = new WrappedHighlighter(mockHighlighter, list);
+
+        highlighter.highlight((InputStream) null);
+
+        verify(mockHighlighter, times(1)).highlight(eq((InputStream) null), any(Map.class));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testHighlighterWithListAndString() {
+
+        final WrappedHighlighter highlighter = new WrappedHighlighter(mockHighlighter, list);
+
+        when(mockHighlighter.highlight(any(InputStream.class), any(Map.class))).then(new VerifyString(TEXT));
+
+        highlighter.highlight(TEXT);
+
+        verify(mockHighlighter, times(1)).highlight(any(InputStream.class), any(Map.class));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testHighlighterWithListAndNullString() {
+
+        final WrappedHighlighter highlighter = new WrappedHighlighter(mockHighlighter, list);
+
+        highlighter.highlight((String) null);
+    }
+
+    /**
+     * Verify that the string in the supplied {@code InputStream is correct.}
+     */
+    private static class VerifyString implements Answer<Void> {
+
+        private final String text;
+
+        /**
+         * Create a new {@code VerifyString} with the expected text.
+         *
+         * @param text the text that is expected to be passed into the mock method as an {@code InputStream}.
+         */
+        private VerifyString(String text) {
+
+            this.text = text;
+        }
 
         @Override
-        public String highlight(InputStream stream, final Map<String, Highlight> highlights) {
+        public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
 
-            try {
+            assertEquals("the converted text should be correct.", text,
+                    IOUtils.toString((InputStream) invocationOnMock.getArguments()[0]));
 
-                String text = IOUtils.toString(stream);
-
-                StringBuilder builder = new StringBuilder();
-                Highlight highlight;
-                for (String word : text.split(" ")) {
-
-                    highlight = highlights.get(word);
-
-                    builder.append(null == highlight ? word : highlight.apply(word)).append(" ");
-                }
-
-                builder.replace(builder.length() - 1, builder.length(), "");
-
-                return builder.toString();
-
-            } catch (IOException e) {
-
-                throw new RuntimeException(e);
-            }
+            return null;
         }
     }
 
-    private static class TestHighlight<T> implements Highlight {
+    private static class TestHighlight implements Highlight {
 
         private final String name;
-        private final T replacement;
 
-        private TestHighlight(String name, T replacement) {
+        private TestHighlight(String name) {
 
             this.name = name;
-            this.replacement = replacement;
         }
 
         @Override
@@ -64,248 +279,26 @@ public class WrappedHighlighterTest {
         @Override
         public String apply(String string) {
 
-            return replacement.toString();
+            return null;
         }
-    }
 
-    private static final String ONE = "one";
-    private static final String TWO = "two";
-    private static final String THREE = "three";
-    private static final String FOUR = "four";
-    private static final String FIVE = "five";
+        @Override
+        public boolean equals(Object o) {
 
-    private static final Map<String, Highlight> HIGHLIGHT_MAP = new HashMap<String, Highlight>() {{
-        put(ONE, new TestHighlight<Integer>(ONE, 1));
-        put(TWO, new TestHighlight<Integer>(TWO, 2));
-        put(THREE, new TestHighlight<Integer>(THREE, 3));
-        put(FOUR, new TestHighlight<Integer>(FOUR, 4));
-        put(FIVE, new TestHighlight<Integer>(FIVE, 5));
-    }};
+            if (this == o) return true;
 
-    private static final List<Highlight> HIGHLIGHTS = new ArrayList<Highlight>(HIGHLIGHT_MAP.values());
+            if (o == null || getClass() != o.getClass()) return false;
 
-    private static final String INPUT_TEXT;
-    private static final String HIGHLIGHTED_TEXT;
+            TestHighlight that = (TestHighlight) o;
 
-    static {
-        try {
+            return name.equals(that.name);
 
-            INPUT_TEXT = IOUtils.toString(WrappedHighlighterTest.class.getResourceAsStream("input.txt"));
-            HIGHLIGHTED_TEXT = IOUtils.toString(WrappedHighlighterTest.class.getResourceAsStream("highlighted.txt"));
-
-        } catch (IOException e) {
-
-            throw new RuntimeException(e);
         }
-    }
 
-    private InputStream inputStream;
+        @Override
+        public int hashCode() {
 
-    @Before
-    public void setUp() {
-
-        inputStream = WrappedHighlighterTest.class.getResourceAsStream("input.txt");
-    }
-
-    @Test
-    public void testCreate() {
-
-        new WrappedHighlighter(new TestHighlighter(), HIGHLIGHT_MAP);
-    }
-
-    @Test
-    public void testCreateWithList() {
-
-        new WrappedHighlighter(new TestHighlighter(), HIGHLIGHTS);
-    }
-
-    @Test(expected = AssertionError.class)
-    public void testCreateWithNullHighlighter() {
-
-        new WrappedHighlighter(null, HIGHLIGHT_MAP);
-    }
-
-    @Test(expected = AssertionError.class)
-    public void testCreateWithNullMap() {
-
-        new WrappedHighlighter(new TestHighlighter(), (Map<String, Highlight>) null);
-    }
-
-    @Test(expected = AssertionError.class)
-    public void testCreateWithNullList() {
-
-        new WrappedHighlighter(new TestHighlighter(), (List<Highlight>) null);
-    }
-
-    @Test
-    public void testHighlightWithInputStreamAndMap() {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(),
-                new HashMap<String, Highlight>());
-
-        assertEquals("the text from a stream should be highlighted correctly.", HIGHLIGHTED_TEXT,
-                highlighter.highlight(inputStream, HIGHLIGHT_MAP));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testHighlightWithNullInputStreamAndMap() {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(),
-                new HashMap<String, Highlight>());
-
-        highlighter.highlight((InputStream) null, HIGHLIGHT_MAP);
-    }
-
-    @Test
-    public void testHighlightWithInputStreamAndEmptyMap() {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(),
-                new HashMap<String, Highlight>());
-
-        assertEquals("the text should not have changed.", INPUT_TEXT,
-                highlighter.highlight(inputStream, new HashMap<String, Highlight>()));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testHighlightWithInputStreamAndNullMap() {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(),
-                new HashMap<String, Highlight>());
-
-        highlighter.highlight(inputStream, null);
-    }
-
-    @Test
-    public void testHighlightWithStringAndMap() throws IOException {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(),
-                new HashMap<String, Highlight>());
-
-        assertEquals("the text from a string should be highlighted correctly.", HIGHLIGHTED_TEXT,
-                highlighter.highlight(INPUT_TEXT, HIGHLIGHT_MAP));
-    }
-
-    @Test
-    public void testHighlightWithEmptyStringAndMap() throws IOException {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(),
-                new HashMap<String, Highlight>());
-
-        assertEquals("empty text should not be modified.", "",
-                highlighter.highlight("", HIGHLIGHT_MAP));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testHighlightWithNullStringAndMap() throws IOException {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(),
-                new HashMap<String, Highlight>());
-
-        highlighter.highlight((String) null, HIGHLIGHT_MAP);
-    }
-
-    @Test
-    public void testHighlightWithStringAndEmptyMap() {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(),
-                new HashMap<String, Highlight>());
-
-        assertEquals("the empty string should not have changed.", INPUT_TEXT,
-                highlighter.highlight(INPUT_TEXT, new HashMap<String, Highlight>()));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testHighlightWithStringAndNullMap() throws IOException {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(),
-                new HashMap<String, Highlight>());
-
-        highlighter.highlight(INPUT_TEXT, null);
-    }
-
-    @Test
-    public void testHighlighterWithMapAndInputStream() {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(), HIGHLIGHT_MAP);
-
-        assertEquals("the text from a stream should be highlighted correctly.", HIGHLIGHTED_TEXT,
-                highlighter.highlight(inputStream));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testHighlighterWithMapAndNullInputStream() {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(), HIGHLIGHT_MAP);
-
-        highlighter.highlight((InputStream) null);
-    }
-
-    @Test
-    public void testHighlighterWithMapAndString() throws IOException {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(), HIGHLIGHT_MAP);
-
-        assertEquals("the text from a stream should be highlighted correctly.", HIGHLIGHTED_TEXT,
-                highlighter.highlight(INPUT_TEXT));
-    }
-
-    @Test
-    public void testHighlighterWithMapAndEmptyString() throws IOException {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(), HIGHLIGHT_MAP);
-
-        assertEquals("the empty string should not have changed.", "",
-                highlighter.highlight(""));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testHighlighterWithMapAndNullString() throws IOException {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(), HIGHLIGHT_MAP);
-
-        highlighter.highlight((String) null);
-    }
-
-    @Test
-    public void testHighlighterWithListAndInputStream() {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(), HIGHLIGHTS);
-
-        assertEquals("the text from a stream should be highlighted correctly.", HIGHLIGHTED_TEXT,
-                highlighter.highlight(inputStream));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testHighlighterWithListAndNullInputStream() {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(), HIGHLIGHTS);
-
-        highlighter.highlight((InputStream) null);
-    }
-
-    @Test
-    public void testHighlighterWithListAndString() throws IOException {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(), HIGHLIGHTS);
-
-        assertEquals("the text from a stream should be highlighted correctly.", HIGHLIGHTED_TEXT,
-                highlighter.highlight(INPUT_TEXT));
-    }
-
-    @Test
-    public void testHighlighterWithListAndEmptyString() throws IOException {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(), HIGHLIGHTS);
-
-        assertEquals("the empty string should not have changed.", "",
-                highlighter.highlight(""));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testHighlighterWithListAndNullString() throws IOException {
-
-        final WrappedHighlighter highlighter = new WrappedHighlighter(new TestHighlighter(), HIGHLIGHTS);
-
-        highlighter.highlight((String) null);
+            return name.hashCode();
+        }
     }
 }
