@@ -8,7 +8,7 @@ There is one class though, the [`WrappedHighlighter`](apidocs/shiver/me/timbers/
 The `Highlight` interface just exposes two methods `Highlight#getName():String` and `Highlight#apply(String):String` which
 expose the name of the highlight and apply it to a string.
 
-The name is mainly used to define the type of token the highlight should be applied.
+The name is mainly used to define the type of token the highlight should be applied to.
 
 #### Highlighter
 
