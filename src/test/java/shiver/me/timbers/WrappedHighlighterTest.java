@@ -261,6 +261,10 @@ public class WrappedHighlighterTest {
         }
     }
 
+    /**
+     * A test implementation of {@code Highlight} that simply populates a name and implements the equality methods to
+     * allow it to be placed within a set.
+     */
     private static class TestHighlight implements Highlight {
 
         private final String name;

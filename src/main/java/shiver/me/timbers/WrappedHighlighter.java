@@ -2,7 +2,7 @@ package shiver.me.timbers;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +16,14 @@ import static shiver.me.timbers.Asserts.assertIsNotNull;
  */
 public class WrappedHighlighter implements Highlighter {
 
+    private static final Charset UTF_8 = Charset.forName("UTF-8");
+
     private final Highlighter highlighter;
     private final Map<String, Highlight> highlights;
 
     /**
      * Create a new {@code WrappedHighlighter} that will store a {@code Highlighter} implementation and
-     * {@code Highlight}s so that they can be easily reapplied to different texts.
+     * {@code Highlight}s so that they can be easily reapplied to different text.
      *
      * @param highlighter the highlighter to use to apply the highlights.
      * @param highlights  the highlights to apply.
@@ -37,7 +39,7 @@ public class WrappedHighlighter implements Highlighter {
 
     /**
      * Create a new {@code WrappedHighlighter} that will store a {@code Highlighter} implementation and
-     * {@code Highlight}s so that they can be easily reapplied to different texts.
+     * {@code Highlight}s so that they can be easily reapplied to different text.
      *
      * @param highlighter the highlighter to use to apply the highlights.
      * @param highlights  the highlights to apply.
@@ -73,7 +75,7 @@ public class WrappedHighlighter implements Highlighter {
      */
     public String highlight(String text, Map<String, Highlight> highlights) {
 
-        return highlight(new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)), highlights);
+        return highlight(new ByteArrayInputStream(text.getBytes(UTF_8)), highlights);
     }
 
     /**
@@ -95,6 +97,6 @@ public class WrappedHighlighter implements Highlighter {
      */
     public String highlight(String text) {
 
-        return highlight(new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)));
+        return highlight(new ByteArrayInputStream(text.getBytes(UTF_8)));
     }
 }
