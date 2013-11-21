@@ -16,7 +16,7 @@
 
     <name>${project.artifactId}</name>
 
-    <description>A simple library for adding highlights to parsible source code.</description>
+    <description>A simple library for adding highlights to source code.</description>
 
     <url>http://karlbennett.github.io/${project.artifactId}/</url>
 
