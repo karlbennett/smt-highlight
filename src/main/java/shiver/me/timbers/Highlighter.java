@@ -1,7 +1,6 @@
 package shiver.me.timbers;
 
 import java.io.InputStream;
-import java.util.Map;
 
 /**
  * Implement with the logic that will apply the {@link Highlight}s to the text in the {@code InputStream}.
@@ -17,5 +16,5 @@ public interface Highlighter {
      * @param highlights the highlights to apply to the text.
      * @return the highlighted text.
      */
-    public String highlight(InputStream stream, Map<String, Highlight> highlights);
+    public String highlight(InputStream stream, Highlights highlights);
 }

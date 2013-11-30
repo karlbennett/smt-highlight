@@ -3,9 +3,6 @@ package shiver.me.timbers;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static shiver.me.timbers.Asserts.assertIsNotNull;
 
@@ -19,7 +16,7 @@ public class WrappedHighlighter implements Highlighter {
     private static final Charset UTF_8 = Charset.forName("UTF-8");
 
     private final Highlighter highlighter;
-    private final Map<String, Highlight> highlights;
+    private final Highlights highlights;
 
     /**
      * Create a new {@code WrappedHighlighter} that will store a {@code Highlighter} implementation and
@@ -28,7 +25,7 @@ public class WrappedHighlighter implements Highlighter {
      * @param highlighter the highlighter to use to apply the highlights.
      * @param highlights  the highlights to apply.
      */
-    public WrappedHighlighter(Highlighter highlighter, Map<String, Highlight> highlights) {
+    public WrappedHighlighter(Highlighter highlighter, Highlights highlights) {
 
         assertIsNotNull("The WrappedHighlighters highlighter argument cannot be null.", highlighter);
         assertIsNotNull("The WrappedHighlighters highlights argument cannot be null.", highlights);
@@ -38,30 +35,10 @@ public class WrappedHighlighter implements Highlighter {
     }
 
     /**
-     * Create a new {@code WrappedHighlighter} that will store a {@code Highlighter} implementation and
-     * {@code Highlight}s so that they can be easily reapplied to different text.
-     *
-     * @param highlighter the highlighter to use to apply the highlights.
-     * @param highlights  the highlights to apply.
-     */
-    public WrappedHighlighter(Highlighter highlighter, final List<Highlight> highlights) {
-
-        this(highlighter, new HashMap<String, Highlight>() {{
-
-            assertIsNotNull("The WrappedHighlighters highlights argument cannot be null.", highlights);
-
-            for (Highlight highlight : highlights) {
-
-                put(highlight.getName(), highlight);
-            }
-        }});
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
-    public String highlight(InputStream stream, Map<String, Highlight> highlights) {
+    public String highlight(InputStream stream, Highlights highlights) {
 
         return highlighter.highlight(stream, highlights);
     }
@@ -73,7 +50,7 @@ public class WrappedHighlighter implements Highlighter {
      * @param highlights the highlights to apply to the text.
      * @return the highlighted text.
      */
-    public String highlight(String text, Map<String, Highlight> highlights) {
+    public String highlight(String text, Highlights highlights) {
 
         return highlight(new ByteArrayInputStream(text.getBytes(UTF_8)), highlights);
     }
