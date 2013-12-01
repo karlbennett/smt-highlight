@@ -27,8 +27,8 @@ public class WrappedHighlighter implements Highlighter {
      */
     public WrappedHighlighter(Highlighter highlighter, Highlights highlights) {
 
-        assertIsNotNull("The WrappedHighlighters highlighter argument cannot be null.", highlighter);
-        assertIsNotNull("The WrappedHighlighters highlights argument cannot be null.", highlights);
+        assertIsNotNull(WrappedHighlighter.class.getSimpleName() + " highlighter argument cannot be null.", highlighter);
+        assertIsNotNull(WrappedHighlighter.class.getSimpleName() + " highlights argument cannot be null.", highlights);
 
         this.highlighter = highlighter;
         this.highlights = highlights;
