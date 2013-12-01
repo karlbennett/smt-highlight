@@ -11,7 +11,7 @@ import static shiver.me.timbers.Asserts.*;
 import static shiver.me.timbers.NullHighlight.*;
 
 /**
- * A collection of individual and possibly unrelated highlightMap.
+ * A collection of individual and possibly unrelated highlights.
  *
  * @author Karl Bennett
  */
