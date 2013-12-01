@@ -7,18 +7,16 @@ import java.util.Iterator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static shiver.me.timbers.NullHighlight.*;
+import static shiver.me.timbers.TestUtils.HIGHLIGHT_NAME_ONE;
+import static shiver.me.timbers.TestUtils.HIGHLIGHT_NAME_THREE;
+import static shiver.me.timbers.TestUtils.HIGHLIGHT_NAME_TWO;
+import static shiver.me.timbers.TestUtils.assertNullHighlight;
+import static shiver.me.timbers.TestUtils.createEmptyIterable;
 
-/**
- * @author Karl Bennett
- */
 public class IndividualHighlightsTest implements HighlightsTestTemplate {
-
-    private static final String HIGHLIGHT_NAME_ONE = "one";
-    private static final String HIGHLIGHT_NAME_TWO = "two";
-    private static final String HIGHLIGHT_NAME_THREE = "three";
 
     private Iterable<Highlight> highlightIterable;
 
@@ -55,19 +53,19 @@ public class IndividualHighlightsTest implements HighlightsTestTemplate {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    public void testCreateIndividualHighlightsWithEmptyIterable() {
+    @Override
+    @SuppressWarnings({"unchecked", "UnusedDeclaration"})
+    public void testCreateWithEmptyIterable() {
 
-        Iterator<Highlight> iterator = mock(Iterator.class);
+        for (Highlight highlight : new IndividualHighlights(createEmptyIterable())) {
 
-        Iterable<Highlight> emptyHighlightIterable = mock(Iterable.class);
-        when(emptyHighlightIterable.iterator()).thenReturn(iterator);
-
-        new IndividualHighlights(emptyHighlightIterable);
+            fail("an empty " + Highlights.class.getSimpleName() + " should not iterate.");
+        }
     }
 
     @Test(expected = AssertionError.class)
-    public void testCreateIndividualHighlightsWithNullHighlights() {
+    @Override
+    public void testCreateWithNullIterable() {
 
         new IndividualHighlights(null);
     }
@@ -94,8 +92,7 @@ public class IndividualHighlightsTest implements HighlightsTestTemplate {
 
         Highlights highlights = new IndividualHighlights(highlightIterable);
 
-        assertEquals("the null highlight should be returned for index 3",
-                NULL_HIGHLIGHT, highlights.get(3));
+        assertNullHighlight(highlights, 3);
     }
 
     @Test
@@ -118,12 +115,9 @@ public class IndividualHighlightsTest implements HighlightsTestTemplate {
     @Override
     public void testGetWithInvalidName() {
 
-        final String INVALID_NAME = "not a highlight";
-
         Highlights highlights = new IndividualHighlights(highlightIterable);
 
-        assertEquals("he null highlight should be returned for a name \"" + INVALID_NAME + "\"",
-                NULL_HIGHLIGHT, highlights.get(INVALID_NAME));
+        assertNullHighlight(highlights, "not a highlight");
     }
 
     @Test
@@ -132,7 +126,7 @@ public class IndividualHighlightsTest implements HighlightsTestTemplate {
 
         Highlights highlights = new IndividualHighlights(highlightIterable);
 
-        assertEquals("he null highlight should be returned for a name null", NULL_HIGHLIGHT, highlights.get(null));
+        assertNullHighlight(highlights, null);
     }
 
     @Test

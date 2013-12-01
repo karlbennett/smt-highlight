@@ -10,9 +10,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static shiver.me.timbers.NullHighlight.NULL_HIGHLIGHT;
 
-/**
- * @author Karl Bennett
- */
 public class NullHighlightTest {
 
     @Test

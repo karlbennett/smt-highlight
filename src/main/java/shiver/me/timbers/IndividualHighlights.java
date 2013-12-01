@@ -3,6 +3,7 @@ package shiver.me.timbers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +62,6 @@ public class IndividualHighlights implements Highlights {
     @Override
     public Iterator<Highlight> iterator() {
 
-        return highlightList.iterator();
+        return new LinkedList<Highlight>(highlightList).iterator();
     }
 }

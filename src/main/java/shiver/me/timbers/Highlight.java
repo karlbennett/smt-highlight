@@ -5,7 +5,7 @@ package shiver.me.timbers;
  *
  * @author Karl Bennett
  */
-public interface Highlight {
+public interface Highlight extends Applyer {
 
     /**
      * The name of the {@code Highlight} indicates the type of {@code String}s that the highlight should be applied to.
@@ -14,12 +14,4 @@ public interface Highlight {
      * @return the name of this {@code Highlight}.
      */
     public String getName();
-
-    /**
-     * Apply the highlight to the supplied {@code String}.
-     *
-     * @param string the {@code String} to apply the highlight to.
-     * @return the {@code String} with the highlight applied.
-     */
-    public String apply(String string);
 }

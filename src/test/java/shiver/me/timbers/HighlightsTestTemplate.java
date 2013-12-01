@@ -10,6 +10,10 @@ public interface HighlightsTestTemplate {
 
     public void testCreate();
 
+    public void testCreateWithEmptyIterable();
+
+    public void testCreateWithNullIterable();
+
     public void testGetWithIndex();
 
     public void testGetWithInvalidIndex();
