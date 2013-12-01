@@ -14,7 +14,7 @@ import static shiver.me.timbers.NullHighlight.*;
 /**
  * @author Karl Bennett
  */
-public class IndividualHighlightsTest {
+public class IndividualHighlightsTest implements HighlightsTestTemplate {
 
     private static final String HIGHLIGHT_NAME_ONE = "one";
     private static final String HIGHLIGHT_NAME_TWO = "two";
@@ -48,7 +48,8 @@ public class IndividualHighlightsTest {
     }
 
     @Test
-    public void testCreateIndividualHighlights() {
+    @Override
+    public void testCreate() {
 
         new IndividualHighlights(highlightIterable);
     }
@@ -72,6 +73,7 @@ public class IndividualHighlightsTest {
     }
 
     @Test
+    @Override
     public void testGetWithIndex() {
 
         Highlights highlights = new IndividualHighlights(highlightIterable);
@@ -87,6 +89,7 @@ public class IndividualHighlightsTest {
     }
 
     @Test
+    @Override
     public void testGetWithInvalidIndex() {
 
         Highlights highlights = new IndividualHighlights(highlightIterable);
@@ -96,6 +99,7 @@ public class IndividualHighlightsTest {
     }
 
     @Test
+    @Override
     public void testGetWithName() {
 
         Highlights highlights = new IndividualHighlights(highlightIterable);
@@ -111,6 +115,7 @@ public class IndividualHighlightsTest {
     }
 
     @Test
+    @Override
     public void testGetWithInvalidName() {
 
         final String INVALID_NAME = "not a highlight";
@@ -122,6 +127,7 @@ public class IndividualHighlightsTest {
     }
 
     @Test
+    @Override
     public void testGetWithNullName() {
 
         Highlights highlights = new IndividualHighlights(highlightIterable);
@@ -130,6 +136,7 @@ public class IndividualHighlightsTest {
     }
 
     @Test
+    @Override
     public void testIterator() {
 
         assertNotNull("an iterator should be returned", new IndividualHighlights(highlightIterable).iterator());
