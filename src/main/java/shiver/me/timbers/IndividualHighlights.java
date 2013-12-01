@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static shiver.me.timbers.Asserts.*;
-import static shiver.me.timbers.NullHighlight.*;
+import static shiver.me.timbers.Asserts.assertIsNotNull;
+import static shiver.me.timbers.NullHighlight.NULL_HIGHLIGHT;
 
 /**
  * A collection of individual and possibly unrelated highlights.
@@ -22,7 +22,8 @@ public class IndividualHighlights implements Highlights {
 
     public IndividualHighlights(Iterable<Highlight> highlights) {
 
-        assertIsNotNull(IndividualHighlights.class.getSimpleName() + " highlights argument cannot be null.", highlights);
+        assertIsNotNull(
+                IndividualHighlights.class.getSimpleName() + " highlights argument cannot be null.", highlights);
 
         this.highlightList = new ArrayList<Highlight>();
         this.highlightMap = new HashMap<String, Highlight>();

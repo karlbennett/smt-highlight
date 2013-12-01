@@ -3,7 +3,7 @@ package shiver.me.timbers;
 import java.util.LinkedList;
 import java.util.List;
 
-import static shiver.me.timbers.Asserts.*;
+import static shiver.me.timbers.Asserts.assertIsNotNull;
 
 /**
  * A collection of highlight names that will all match to the same {@link Highlight#apply(String)} logic.

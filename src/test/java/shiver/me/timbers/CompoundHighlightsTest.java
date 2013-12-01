@@ -48,7 +48,7 @@ public class CompoundHighlightsTest implements HighlightsTestTemplate {
     @Override
     public void testCreateWithEmptyIterable() {
 
-        for (Highlight highlight :  new CompoundHighlights(createEmptyIterable(), applyer)) {
+        for (Highlight highlight : new CompoundHighlights(createEmptyIterable(), applyer)) {
 
             fail("an empty " + Highlights.class.getSimpleName() + " should not iterate.");
         }
