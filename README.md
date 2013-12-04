@@ -47,7 +47,7 @@ new IndividualTransformations(
 #### NullTransformation
 
 This is just a `null` implementation of the `Transformation` interface that has the empty string as it's name and an
-`apply(String)` that makes no change to the string passed to it.
+`apply(String)` method that makes no change to the string passed to it.
 
 #### WrappedTransformer
 
