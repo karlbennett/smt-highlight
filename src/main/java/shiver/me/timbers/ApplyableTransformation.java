@@ -1,6 +1,6 @@
 package shiver.me.timbers;
 
-import static shiver.me.timbers.Asserts.*;
+import static shiver.me.timbers.Asserts.assertIsNotNull;
 
 /**
  * This {@code Transformation} can have it's {@code Applyer} customised.

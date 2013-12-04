@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import static shiver.me.timbers.Asserts.assertIsNotNull;
-import static shiver.me.timbers.Checks.*;
+import static shiver.me.timbers.Checks.isNull;
 import static shiver.me.timbers.NullTransformation.NULL_TRANSFORMATION;
 
 /**
