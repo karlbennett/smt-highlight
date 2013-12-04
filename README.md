@@ -1,22 +1,55 @@
-smt-highlight
+smt-transformation
 ===========
 
-This is the API that is implemented by all the SMT highlight libraries. It doesn't contain any implementation its self.
+This is the API that is implemented by all the SMT transformation libraries. It doesn't contain any stream processing
+logic its self.
 
-There is one class though, the
-[`WrappedHighlighter`](http://karlbennett.github.io/smt-highlight/apidocs/shiver/me/timbers/WrappedHighlighter.html),
-that can be used to store a highlighter and any
-[`Highlight`s](http://karlbennett.github.io/smt-highlight/apidocs/shiver/me/timbers/Highlight.html) together.
+How ever it does contain some helper classes.
 
-#### Highlight
+#### ApplyableTransformation
 
-The `Highlight` interface just exposes two methods `Highlight#getName():String` and `Highlight#apply(String):String`
-which expose the name of the highlight and apply it to a string.
+This is a very simple abstract implementation of the [`Transformation`]() interface that allows the [`Applyer`]() half
+of the `Transformation` to be set as a constructor dependency.
 
-The name is mainly used to define the type of token the highlight should be applied to.
+#### CompoundTransformations
 
-#### Highlighter
+A [`Transformations`]() implementation that is used to relate a collection of `Transformation` names to a single
+`Applyer` instance.
 
-The [`Highlighter`](http://karlbennett.github.io/smt-highlight/apidocs/shiver/me/timbers/Highlighter.html) interface
-exposes a single `highlight(InputStream,Map<String, Highlight>):String` method that should be implemented with the logic
-that will apply the highlights supplied in the map to the text supplied in the input stream.
+```
+Transformations transformations = new CompoundTransformations(asList("one", "two", "three"), new Applyer() {
+
+    @Override
+    public String apply(String string) {
+
+        return "applied";
+    }
+});
+
+transformations.get("one").apply("one"); // "applied"
+transformations.get("two").apply("two"); // "applied"
+transformations.get("three").apply("three"); // "applied"
+transformations.get("four").apply("four"); // "four"
+```
+
+#### IndividualTransformations
+
+This implementation of the `Transformations` interface can be populated with any `Iterable` object. This means it can be
+populated from another `Transformations` instance.
+
+```
+new IndividualTransformations(
+    new IndividualTransformations(
+        asList(transformationOne, transformationTwo, transformationThree)
+    )
+);
+```
+#### NullTransformation
+
+This is just a `null` implementation of the `Transformation` interface that has the empty string as it's name and an
+`apply(String)` that makes no change to the string passed to it.
+
+#### WrappedTransformer
+
+This `Transformer` implementation wraps a `Transformer` and `Transformations` together to simplify reapplying the two
+over different texts. It also contains some helper methods for applying the `Transformations` to `String`s.

@@ -1,14 +1,14 @@
 package shiver.me.timbers;
 
 /**
- * This highlight is returned when not matching highlight can be found. It has no name and it's apply method just
- * returns the supplied {@code Sting} without any modification.
+ * This transformation should be returned when no matching transformation can be found. It has no name and it's apply
+ * method just returns the supplied {@code Sting} without any modification.
  *
  * @author Karl Bennett
  */
-public class NullHighlight implements Highlight {
+public class NullTransformation implements Transformation {
 
-    public static final NullHighlight NULL_HIGHLIGHT = new NullHighlight();
+    public static final NullTransformation NULL_TRANSFORMATION = new NullTransformation();
 
     /**
      * {@inheritDoc}
@@ -16,7 +16,7 @@ public class NullHighlight implements Highlight {
     @Override
     public String getName() {
 
-        return NullHighlight.class.getSimpleName();
+        return NullTransformation.class.getSimpleName();
     }
 
     /**
@@ -35,7 +35,7 @@ public class NullHighlight implements Highlight {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        NullHighlight that = (NullHighlight) o;
+        NullTransformation that = (NullTransformation) o;
 
         return getName().equals(that.getName());
 

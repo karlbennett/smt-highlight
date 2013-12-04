@@ -1,17 +1,65 @@
-This is the API that is implemented by all the SMT highlight libraries. It doesn't contain any implementation its self.
+This transformation API can be implemented to simplify the transformation of tokens within text. All that is required is
+the implementation of a [`Transformer`](apidocs/shiver/me/timbers/Transformer.html) along with some
+[`Transformations`](apidocs/shiver/me/timbers/Transformations.html).
 
-There is one class though, the [`WrappedHighlighter`](apidocs/shiver/me/timbers/WrappedHighlighter.html), that can be used to store a highlighter and any
-[`Highlight`s](apidocs/shiver/me/timbers/Highlight.html) together.
+For example a simple parsing transformer could be implemented as follows.
 
-#### Highlight
+```
+Transformer transformer = new Transformer() {
 
-The `Highlight` interface just exposes two methods `Highlight#getName():String` and `Highlight#apply(String):String` which
-expose the name of the highlight and apply it to a string.
+    @Override
+    public String transform(InputStream stream, Transformations transformations) {
 
-The name is mainly used to define the type of token the highlight should be applied to.
+        String[] strings = read(stream).split(" ");
 
-#### Highlighter
+        StringBuilder builder = new StringBuilder();
 
-The [`Highlighter`](apidocs/shiver/me/timbers/Highlighter.html) interface exposes a single `highlight(InputStream,Map<String, Highlight>):String` method that
-should be implemented with the logic that will apply the highlights supplied in the map to the text supplied in the
-input stream.
+        for (String string : strings) {
+
+            builder.append(transformations.get(string)).append(" ");
+        }
+
+        return builder.toString();
+    }
+};
+```
+
+This will apply any supplied transformations to all the words in any supplied text. So, if we wanted to replace the
+numbers 1-5 with their equivalent words we could implement the following
+[`Transformation`](apidocs/shiver/me/timbers/Transformation.html)s.
+
+```
+Transformation t1 = new Transformation() {
+
+    @Override
+    public String getName() {
+
+        return "1";
+    }
+
+    @Override
+    public String apply(String string) {
+
+        return "one";
+    }
+};
+
+Transformation t2 = new Transformation() {/*...*/};
+
+Transformation t3 = new Transformation() {/*...*/};
+
+Transformation t4 = new Transformation() {/*...*/};
+
+Transformation t5 = new Transformation() {/*...*/};
+```
+
+Then run them against some text.
+
+```
+String text = "Some text that has 1 or 2 numbers in it... 3 4 5 6";
+
+InputStream stream = new ByteArrayInputStream(text.getBytes(Charset.forName("UTF-8")));
+
+transformer.transform(stream, new IndividualTransformations(asList(t1, t2, t3, t4, t5)));
+// Some text that has one or two numbers in it... three four five 6
+```

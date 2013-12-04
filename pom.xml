@@ -9,14 +9,14 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>smt-highlight</artifactId>
+    <artifactId>smt-transform</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
 
-    <description>A simple API for adding highlights to source code.</description>
+    <description>A simple API for adding transformations to source code.</description>
 
     <url>http://karlbennett.github.io/${project.artifactId}/</url>
 

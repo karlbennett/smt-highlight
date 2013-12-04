@@ -1,12 +1,12 @@
 package shiver.me.timbers;
 
 /**
- * This is the minimum suite of tests that must be implemented for any new {@link Highlights} class.
+ * This is the minimum suite of tests that must be implemented for any new {@link Transformations} class.
  *
  * @author Karl Bennett
  */
 @SuppressWarnings("UnusedDeclaration")
-public interface HighlightsTestTemplate {
+public interface TransformationsTestTemplate {
 
     public void testCreate();
 

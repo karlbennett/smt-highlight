@@ -5,7 +5,7 @@ import java.util.Iterator;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static shiver.me.timbers.NullHighlight.NULL_HIGHLIGHT;
+import static shiver.me.timbers.NullTransformation.NULL_TRANSFORMATION;
 
 /**
  * Utility methods and constants to help with creating tests.
@@ -17,9 +17,9 @@ public final class TestUtils {
     private TestUtils() {
     }
 
-    public static final String HIGHLIGHT_NAME_ONE = "one";
-    public static final String HIGHLIGHT_NAME_TWO = "two";
-    public static final String HIGHLIGHT_NAME_THREE = "three";
+    public static final String Transformation_NAME_ONE = "one";
+    public static final String Transformation_NAME_TWO = "two";
+    public static final String Transformation_NAME_THREE = "three";
 
 
     public static Iterable createEmptyIterable() {
@@ -33,20 +33,20 @@ public final class TestUtils {
     }
 
     /**
-     * Assert that the returned {@link Highlight} is the {@link NullHighlight} for the supplied index.
+     * Assert that the returned {@link Transformation} is the {@link NullTransformation} for the supplied index.
      */
-    public static void assertNullHighlight(Highlights highlights, int index) {
+    public static void assertNullTransformation(Transformations transformations, int index) {
 
-        assertEquals("the null highlight should be returned for the index " + index, NULL_HIGHLIGHT,
-                highlights.get(index));
+        assertEquals("the null Transformation should be returned for the index " + index, NULL_TRANSFORMATION,
+                transformations.get(index));
     }
 
     /**
-     * Assert that the returned {@link Highlight} is the {@link NullHighlight} for the supplied name.
+     * Assert that the returned {@link Transformation} is the {@link NullTransformation} for the supplied name.
      */
-    public static void assertNullHighlight(Highlights highlights, String name) {
+    public static void assertNullTransformation(Transformations transformations, String name) {
 
-        assertEquals("the null highlight should be returned for the name " + name, NULL_HIGHLIGHT,
-                highlights.get(name));
+        assertEquals("the null Transformation should be returned for the name " + name, NULL_TRANSFORMATION,
+                transformations.get(name));
     }
 }
