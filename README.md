@@ -17,14 +17,16 @@ A [`Transformations`]() implementation that is used to relate a collection of `T
 `Applyer` instance.
 
 ```java
-Transformations transformations = new CompoundTransformations(asList("one", "two", "three"), new Applyer() {
+Transformations transformations = new CompoundTransformations(asList("one", "two", "three"),
+    new Applyer() {
 
-    @Override
-    public String apply(String string) {
+        @Override
+        public String apply(String string) {
 
-        return "applied";
+            return "applied";
+        }
     }
-});
+);
 
 transformations.get("one").apply("one"); // "applied"
 transformations.get("two").apply("two"); // "applied"
