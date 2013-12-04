@@ -16,7 +16,7 @@ of the `Transformation` to be set as a constructor dependency.
 A [`Transformations`]() implementation that is used to relate a collection of `Transformation` names to a single
 `Applyer` instance.
 
-```
+```java
 Transformations transformations = new CompoundTransformations(asList("one", "two", "three"), new Applyer() {
 
     @Override
@@ -37,7 +37,7 @@ transformations.get("four").apply("four"); // "four"
 This implementation of the `Transformations` interface can be populated with any `Iterable` object. This means it can be
 populated from another `Transformations` instance.
 
-```
+```java
 new IndividualTransformations(
     new IndividualTransformations(
         asList(transformationOne, transformationTwo, transformationThree)
