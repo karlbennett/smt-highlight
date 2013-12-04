@@ -1,4 +1,4 @@
-smt-transformation
+smt-transform
 ===========
 
 This is the API that is implemented by all the SMT transformation libraries. It doesn't contain any stream processing
