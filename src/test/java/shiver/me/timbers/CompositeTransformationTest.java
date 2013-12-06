@@ -3,12 +3,15 @@ package shiver.me.timbers;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ApplyableTransformationTest {
+public class CompositeTransformationTest {
+
+    private static final String NAME = "test_name";
 
     private static final String TEST_TEXT = "some test text.";
 
@@ -23,19 +26,31 @@ public class ApplyableTransformationTest {
     @Test
     public void testCreate() {
 
-        new TestApplyableTransformation(applyer);
+        new CompositeTransformation(NAME, applyer);
     }
 
     @Test(expected = AssertionError.class)
-    public void testCreateWithNull() {
+    public void testCreateWithNullApplyer() {
 
-        new TestApplyableTransformation(null);
+        new CompositeTransformation(NAME, null);
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testCreateWithNullName() {
+
+        new CompositeTransformation(null, applyer);
+    }
+
+    @Test
+    public void testGetName() {
+
+        assertEquals("the name should be set correctly.", NAME, new CompositeTransformation(NAME, applyer).getName());
     }
 
     @Test
     public void testApply() {
 
-        new TestApplyableTransformation(applyer).apply(TEST_TEXT);
+        new CompositeTransformation(NAME, applyer).apply(TEST_TEXT);
 
         verify(applyer, times(1)).apply(TEST_TEXT);
     }
@@ -43,7 +58,7 @@ public class ApplyableTransformationTest {
     @Test
     public void testApplyWithNull() {
 
-        new TestApplyableTransformation(applyer).apply(null);
+        new CompositeTransformation(NAME, applyer).apply(null);
 
         verify(applyer, times(1)).apply(null);
     }
@@ -53,19 +68,6 @@ public class ApplyableTransformationTest {
 
         when(applyer.apply(TEST_TEXT)).thenThrow(new Exception());
 
-        new TestApplyableTransformation(applyer).apply(TEST_TEXT);
-    }
-
-    private static class TestApplyableTransformation extends ApplyableTransformation {
-
-        protected TestApplyableTransformation(Applyer applyer) {
-            super(applyer);
-        }
-
-        @Override
-        public String getName() {
-
-            return getClass().getSimpleName();
-        }
+        new CompositeTransformation(NAME, applyer).apply(TEST_TEXT);
     }
 }
