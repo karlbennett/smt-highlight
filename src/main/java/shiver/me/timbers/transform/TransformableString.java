@@ -29,6 +29,9 @@ public class TransformableString implements CharSequence {
         this.currentStartIndex = -1;
     }
 
+    /**
+     * Apply the supplied {@code Transformation} to the substring within the supplied indices.
+     */
     public void transformSubstring(Transformation transformation, int startIndex, int stopIndex) {
 
         if (isNewWord(getCurrentStartIndex(), startIndex)) {
