@@ -1,4 +1,4 @@
-package shiver.me.timbers;
+package shiver.me.timbers.transform;
 
 import org.junit.Test;
 
@@ -8,7 +8,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static shiver.me.timbers.NullTransformation.NULL_TRANSFORMATION;
+import static shiver.me.timbers.transform.NullTransformation.NULL_TRANSFORMATION;
 
 public class NullTransformationTest {
 

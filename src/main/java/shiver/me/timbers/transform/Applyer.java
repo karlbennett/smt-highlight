@@ -1,4 +1,4 @@
-package shiver.me.timbers;
+package shiver.me.timbers.transform;
 
 /**
  * The applying half of the {@link Transformation} interface. Simply provides an {@link #apply(String)} method that can

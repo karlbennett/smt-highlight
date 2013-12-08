@@ -1,4 +1,4 @@
-package shiver.me.timbers;
+package shiver.me.timbers.transform;
 
 /**
  * A Transformation is a class that applies a transformation to a supplied {@code String}.

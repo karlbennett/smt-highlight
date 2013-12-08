@@ -1,6 +1,6 @@
-package shiver.me.timbers;
+package shiver.me.timbers.transform;
 
-import static shiver.me.timbers.Asserts.*;
+import static shiver.me.timbers.Asserts.assertIsNotNull;
 
 /**
  * This is a concrete {@code Transformation} that can have it's name and {@link Applyer} set as constructor

@@ -1,5 +1,6 @@
-package shiver.me.timbers;
+package shiver.me.timbers.transform;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,11 +12,6 @@ import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static shiver.me.timbers.TestUtils.ONE;
-import static shiver.me.timbers.TestUtils.THREE;
-import static shiver.me.timbers.TestUtils.TWO;
-import static shiver.me.timbers.TestUtils.assertNullTransformation;
-import static shiver.me.timbers.TestUtils.createEmptyIterable;
 
 public class CompoundTransformationsTest implements TransformationsTestTemplate {
 
@@ -28,7 +24,7 @@ public class CompoundTransformationsTest implements TransformationsTestTemplate 
 
         final Iterator<String> iterator = mock(Iterator.class);
         when(iterator.hasNext()).thenReturn(true, true, true, false);
-        when(iterator.next()).thenReturn(ONE, TWO, THREE);
+        when(iterator.next()).thenReturn(TestUtils.ONE, TestUtils.TWO, TestUtils.THREE);
 
         iterable = mock(Iterable.class);
         when(iterable.iterator()).thenReturn(iterator);
@@ -48,7 +44,7 @@ public class CompoundTransformationsTest implements TransformationsTestTemplate 
     @Override
     public void testCreateWithEmptyIterable() {
 
-        for (Transformation transformation : new CompoundTransformations(createEmptyIterable(), applyer)) {
+        for (Transformation transformation : new CompoundTransformations(TestUtils.createEmptyIterable(), applyer)) {
 
             fail("an empty " + Transformations.class.getSimpleName() + " should not iterate.");
         }
@@ -73,14 +69,14 @@ public class CompoundTransformationsTest implements TransformationsTestTemplate 
 
         final Transformations transformations = new CompoundTransformations(iterable, applyer);
 
-        assertEquals("a Transformation with the name " + ONE + " should be returned for index 0",
-                ONE, transformations.get(0).getName());
+        Assert.assertEquals("a Transformation with the name " + TestUtils.ONE + " should be returned for index 0",
+                TestUtils.ONE, transformations.get(0).getName());
 
-        assertEquals("a Transformation with the name " + TWO + " should be returned for index 1",
-                TWO, transformations.get(1).getName());
+        Assert.assertEquals("a Transformation with the name " + TestUtils.TWO + " should be returned for index 1",
+                TestUtils.TWO, transformations.get(1).getName());
 
-        assertEquals("a Transformation with the name " + THREE + " should be returned for index 2",
-                THREE, transformations.get(2).getName());
+        Assert.assertEquals("a Transformation with the name " + TestUtils.THREE + " should be returned for index 2",
+                TestUtils.THREE, transformations.get(2).getName());
     }
 
     @Test
@@ -89,8 +85,8 @@ public class CompoundTransformationsTest implements TransformationsTestTemplate 
 
         Transformations transformations = new CompoundTransformations(iterable, applyer);
 
-        assertNullTransformation(transformations, 3);
-        assertNullTransformation(transformations, -1);
+        TestUtils.assertNullTransformation(transformations, 3);
+        TestUtils.assertNullTransformation(transformations, -1);
     }
 
     @Test
@@ -99,17 +95,17 @@ public class CompoundTransformationsTest implements TransformationsTestTemplate 
 
         final Transformations transformations = new CompoundTransformations(iterable, applyer);
 
-        assertEquals("a Transformation with the name " + ONE + " should be returned for the name " +
-                ONE,
-                ONE, transformations.get(ONE).getName());
+        Assert.assertEquals("a Transformation with the name " + TestUtils.ONE + " should be returned for the name " +
+                TestUtils.ONE,
+                TestUtils.ONE, transformations.get(TestUtils.ONE).getName());
 
-        assertEquals("a Transformation with the name " + TWO + " should be returned for the name " +
-                TWO,
-                TWO, transformations.get(TWO).getName());
+        Assert.assertEquals("a Transformation with the name " + TestUtils.TWO + " should be returned for the name " +
+                TestUtils.TWO,
+                TestUtils.TWO, transformations.get(TestUtils.TWO).getName());
 
-        assertEquals("a Transformation with the name " + THREE + " should be returned for the name " +
-                THREE,
-                THREE, transformations.get(THREE).getName());
+        Assert.assertEquals("a Transformation with the name " + TestUtils.THREE + " should be returned for the name " +
+                TestUtils.THREE,
+                TestUtils.THREE, transformations.get(TestUtils.THREE).getName());
     }
 
     @Test
@@ -118,7 +114,7 @@ public class CompoundTransformationsTest implements TransformationsTestTemplate 
 
         Transformations transformations = new CompoundTransformations(iterable, applyer);
 
-        assertNullTransformation(transformations, "not a transformation");
+        TestUtils.assertNullTransformation(transformations, "not a transformation");
     }
 
     @Test
@@ -127,7 +123,7 @@ public class CompoundTransformationsTest implements TransformationsTestTemplate 
 
         Transformations transformations = new CompoundTransformations(iterable, applyer);
 
-        assertNullTransformation(transformations, null);
+        TestUtils.assertNullTransformation(transformations, null);
     }
 
     @Test

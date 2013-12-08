@@ -1,4 +1,4 @@
-package shiver.me.timbers;
+package shiver.me.timbers.transform;
 
 /**
  * An iterable collection of {@link Transformation}s.

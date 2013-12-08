@@ -1,4 +1,4 @@
-package shiver.me.timbers;
+package shiver.me.timbers.transform;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,33 +9,42 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static shiver.me.timbers.TestUtils.EIGHT;
-import static shiver.me.timbers.TestUtils.EIGHT_START_INDEX;
-import static shiver.me.timbers.TestUtils.FIVE;
-import static shiver.me.timbers.TestUtils.FIVE_START_INDEX;
-import static shiver.me.timbers.TestUtils.FOUR;
-import static shiver.me.timbers.TestUtils.FOUR_START_INDEX;
-import static shiver.me.timbers.TestUtils.NINE;
-import static shiver.me.timbers.TestUtils.NINE_START_INDEX;
-import static shiver.me.timbers.TestUtils.NUMBER_TRANSFORMATION_MAP;
-import static shiver.me.timbers.TestUtils.NumberTransformation;
-import static shiver.me.timbers.TestUtils.ODD_EVEN_TRANSFORMATION_MAP;
-import static shiver.me.timbers.TestUtils.ONE;
-import static shiver.me.timbers.TestUtils.ONE_START_INDEX;
-import static shiver.me.timbers.TestUtils.ONE_STOP_INDEX;
-import static shiver.me.timbers.TestUtils.SEVEN;
-import static shiver.me.timbers.TestUtils.SEVEN_START_INDEX;
-import static shiver.me.timbers.TestUtils.SIX;
-import static shiver.me.timbers.TestUtils.SIX_START_INDEX;
-import static shiver.me.timbers.TestUtils.TEN;
-import static shiver.me.timbers.TestUtils.TEN_START_INDEX;
-import static shiver.me.timbers.TestUtils.TEST_TEXT;
-import static shiver.me.timbers.TestUtils.THREE;
-import static shiver.me.timbers.TestUtils.THREE_START_INDEX;
-import static shiver.me.timbers.TestUtils.TRANSFORMED_SEVEN_TEXT;
-import static shiver.me.timbers.TestUtils.TRANSFORMED_TEXT;
-import static shiver.me.timbers.TestUtils.TWO;
-import static shiver.me.timbers.TestUtils.TWO_START_INDEX;
+import static shiver.me.timbers.transform.TestUtils.EIGHT;
+import static shiver.me.timbers.transform.TestUtils.EIGHT_START_INDEX;
+import static shiver.me.timbers.transform.TestUtils.EIGHT_STOP_INDEX;
+import static shiver.me.timbers.transform.TestUtils.FIVE;
+import static shiver.me.timbers.transform.TestUtils.FIVE_START_INDEX;
+import static shiver.me.timbers.transform.TestUtils.FIVE_STOP_INDEX;
+import static shiver.me.timbers.transform.TestUtils.FOUR;
+import static shiver.me.timbers.transform.TestUtils.FOUR_START_INDEX;
+import static shiver.me.timbers.transform.TestUtils.FOUR_STOP_INDEX;
+import static shiver.me.timbers.transform.TestUtils.NINE;
+import static shiver.me.timbers.transform.TestUtils.NINE_START_INDEX;
+import static shiver.me.timbers.transform.TestUtils.NINE_STOP_INDEX;
+import static shiver.me.timbers.transform.TestUtils.NUMBER_TRANSFORMATION_MAP;
+import static shiver.me.timbers.transform.TestUtils.NumberTransformation;
+import static shiver.me.timbers.transform.TestUtils.ODD_EVEN_TRANSFORMATION_MAP;
+import static shiver.me.timbers.transform.TestUtils.ONE;
+import static shiver.me.timbers.transform.TestUtils.ONE_START_INDEX;
+import static shiver.me.timbers.transform.TestUtils.ONE_STOP_INDEX;
+import static shiver.me.timbers.transform.TestUtils.SEVEN;
+import static shiver.me.timbers.transform.TestUtils.SEVEN_START_INDEX;
+import static shiver.me.timbers.transform.TestUtils.SEVEN_STOP_INDEX;
+import static shiver.me.timbers.transform.TestUtils.SIX;
+import static shiver.me.timbers.transform.TestUtils.SIX_START_INDEX;
+import static shiver.me.timbers.transform.TestUtils.SIX_STOP_INDEX;
+import static shiver.me.timbers.transform.TestUtils.TEN;
+import static shiver.me.timbers.transform.TestUtils.TEN_START_INDEX;
+import static shiver.me.timbers.transform.TestUtils.TEN_STOP_INDEX;
+import static shiver.me.timbers.transform.TestUtils.TEST_TEXT;
+import static shiver.me.timbers.transform.TestUtils.THREE;
+import static shiver.me.timbers.transform.TestUtils.THREE_START_INDEX;
+import static shiver.me.timbers.transform.TestUtils.THREE_STOP_INDEX;
+import static shiver.me.timbers.transform.TestUtils.TRANSFORMED_SEVEN_TEXT;
+import static shiver.me.timbers.transform.TestUtils.TRANSFORMED_TEXT;
+import static shiver.me.timbers.transform.TestUtils.TWO;
+import static shiver.me.timbers.transform.TestUtils.TWO_START_INDEX;
+import static shiver.me.timbers.transform.TestUtils.TWO_STOP_INDEX;
 
 public class TransformableStringTest {
 
@@ -141,6 +150,20 @@ public class TransformableStringTest {
     }
 
     @Test
+    public void testUpdateOriginalSubstring() {
+
+        transformableString.updateOriginalSubString(ONE_START_INDEX, ONE_STOP_INDEX);
+
+        assertEquals("the original substring should be set correctly.", ONE, transformableString.getOriginalSubString());
+    }
+
+    @Test(expected = StringIndexOutOfBoundsException.class)
+    public void testUpdateOriginalSubstringWithInverseIndices() {
+
+        transformableString.updateOriginalSubString(ONE_STOP_INDEX, ONE_START_INDEX);
+    }
+
+    @Test
     public void testUpdateActualStartIndexWithNoOffset() {
 
         transformableString.updateActualStartIndex(0, ONE_START_INDEX);
@@ -154,10 +177,10 @@ public class TransformableStringTest {
 
         final int OLD_OFFSET = 5;
 
-        transformableString.updateActualStartIndex(OLD_OFFSET, ONE_START_INDEX);
+        transformableString.updateActualStartIndex(OLD_OFFSET, TWO_START_INDEX);
 
         assertEquals("with a positive offset the actual start index should be equal to the current index plus the old offset.",
-                ONE_START_INDEX + OLD_OFFSET, transformableString.getActualStartIndex());
+                TWO_START_INDEX + OLD_OFFSET, transformableString.getActualStartIndex());
     }
 
     @Test
@@ -190,68 +213,64 @@ public class TransformableStringTest {
     }
 
     @Test
-    public void testUpdateActualLengthWithNoOffset() {
+    public void testUpdateActualStopIndexWithNoOffset() {
 
         final int LENGTH = ONE.length();
 
-        transformableString.updateActualLength(0, LENGTH);
+        transformableString.updateActualStopIndex(0, 0, LENGTH);
 
         assertEquals("with no offset the current and actual stop indices should be equal.",
-                LENGTH, transformableString.getActualLength());
+                LENGTH, transformableString.getActualStopIndex());
     }
 
     @Test
-    public void testUpdateActualLengthWithPositiveOffset() {
+    public void testUpdateActualStopIndexWithPositiveOffset() {
 
         final int LENGTH = ONE.length();
+        final int OLD_OFFSET = 5;
         final int CURRENT_OFFSET = 5;
 
-        transformableString.updateActualLength(CURRENT_OFFSET, LENGTH);
+        transformableString.updateActualStopIndex(OLD_OFFSET, CURRENT_OFFSET, LENGTH);
 
         assertEquals("with a positive offset the actual stop index should be equal to the current index plus the offset.",
-                CURRENT_OFFSET + LENGTH, transformableString.getActualLength());
+                OLD_OFFSET + CURRENT_OFFSET + LENGTH, transformableString.getActualStopIndex());
     }
 
     @Test
-    public void testUpdateActualLengthWithNegativeOffset() {
+    public void testUpdateActualStopIndexWithNegativeOffset() {
 
         final int LENGTH = ONE.length();
+        final int OLD_OFFSET = -5;
         final int CURRENT_OFFSET = -5;
 
-        transformableString.updateActualLength(CURRENT_OFFSET, LENGTH);
+        transformableString.updateActualStopIndex(OLD_OFFSET, CURRENT_OFFSET, LENGTH);
 
         assertEquals("with a negative offset the actual stop index should be equal to the current index plus the offset.",
-                CURRENT_OFFSET + LENGTH, transformableString.getActualLength());
+                OLD_OFFSET + CURRENT_OFFSET + LENGTH, transformableString.getActualStopIndex());
     }
 
     @Test
-    public void testUpdateActualLengthWithNegativeOffsetAndZeroCurrentIndex() {
+    public void testUpdateActualStopIndexWithNegativeOffsetAndZeroCurrentIndex() {
 
-        final int LENGTH = 0;
-        final int CURRENT_OFFSET = -5;
-
-        transformableString.updateActualLength(CURRENT_OFFSET, LENGTH);
+        transformableString.updateActualStopIndex(-5, -5, 0);
 
         assertThat("a negative offset and a current index of 0 should produce a negative actual index.",
-                transformableString.getActualLength(), lessThan(0));
+                transformableString.getActualStopIndex(), lessThan(0));
     }
 
     @Test
-    public void testUpdateActualLengthWithNegativeCurrentIndex() {
+    public void testUpdateActualStopIndexWithNegativeCurrentIndex() {
 
-        final int LENGTH = -5;
-        final int CURRENT_OFFSET = 0;
-
-        transformableString.updateActualLength(CURRENT_OFFSET, LENGTH);
+        transformableString.updateActualStopIndex(0, 0, -5);
 
         assertThat("a negative current index should produce a negative actual index.",
-                transformableString.getActualLength(), lessThan(0));
+                transformableString.getActualStopIndex(), lessThan(0));
     }
 
     @Test
     public void testApplyTransformationToMainStringWithNoOffset() {
 
-        transformableString.applyTransformationToMainString(ONE_START_INDEX, ONE.length(), ONE + "12345");
+        transformableString.applyTransformationToMainString(ONE_START_INDEX, ONE_STOP_INDEX, ONE + "12345");
 
         assertEquals("one12345 two three four five six seven eight nine ten", transformableString.toString());
     }
@@ -259,8 +278,8 @@ public class TransformableStringTest {
     @Test
     public void testApplyTransformationToMainStringWithPositiveCurrentOffset() {
 
-        transformableString.applyTransformationToMainString(ONE_START_INDEX, ONE.length(), ONE + "123");
-        transformableString.applyTransformationToMainString(ONE_START_INDEX, ONE.length() + 3, ONE + "12345");
+        transformableString.applyTransformationToMainString(ONE_START_INDEX, ONE_STOP_INDEX, ONE + "123");
+        transformableString.applyTransformationToMainString(ONE_START_INDEX, ONE_STOP_INDEX + 3, ONE + "12345");
 
         assertEquals("one12345 two three four five six seven eight nine ten", transformableString.toString());
     }
@@ -268,8 +287,8 @@ public class TransformableStringTest {
     @Test
     public void testApplyTransformationToMainStringWithPositiveOldOffset() {
 
-        transformableString.applyTransformationToMainString(ONE_START_INDEX, ONE.length(), ONE + "12345");
-        transformableString.applyTransformationToMainString(TWO_START_INDEX + 5, TWO.length(), TWO + "123");
+        transformableString.applyTransformationToMainString(ONE_START_INDEX, ONE_STOP_INDEX, ONE + "12345");
+        transformableString.applyTransformationToMainString(TWO_START_INDEX + 5, TWO_STOP_INDEX + 5, TWO + "123");
 
         assertEquals("one12345 two123 three four five six seven eight nine ten", transformableString.toString());
     }
@@ -277,9 +296,9 @@ public class TransformableStringTest {
     @Test
     public void testApplyTransformationToMainStringWithPositiveOldOffsetAndNegativeCurrentOffset() {
 
-        transformableString.applyTransformationToMainString(ONE_START_INDEX, ONE.length(), ONE + "12345");
-        transformableString.applyTransformationToMainString(TWO_START_INDEX + 5, TWO.length(), TWO + "123");
-        transformableString.applyTransformationToMainString(TWO_START_INDEX + 5, TWO.length() + 3, TWO + "1");
+        transformableString.applyTransformationToMainString(ONE_START_INDEX, ONE_STOP_INDEX, ONE + "12345");
+        transformableString.applyTransformationToMainString(TWO_START_INDEX + 5, TWO_STOP_INDEX + 5, TWO + "123");
+        transformableString.applyTransformationToMainString(TWO_START_INDEX + 5, TWO_STOP_INDEX + 8, TWO + "1");
 
         assertEquals("one12345 two1 three four five six seven eight nine ten", transformableString.toString());
     }
@@ -287,7 +306,7 @@ public class TransformableStringTest {
     @Test
     public void testTransformSubstringWithTransformationsTwo() {
 
-        applyTransformation(SEVEN_START_INDEX, SEVEN);
+        applyTransformation(SEVEN_START_INDEX, SEVEN_STOP_INDEX, SEVEN);
 
         assertEquals("transformed string should only contain a modified seven.", TRANSFORMED_SEVEN_TEXT,
                 transformableString.toString());
@@ -296,16 +315,16 @@ public class TransformableStringTest {
     @Test
     public void testTransformSubstringWithTransformationsOnAllNumbers() {
 
-        applyTransformation(ONE_START_INDEX, ONE);
-        applyTransformation(TWO_START_INDEX, TWO);
-        applyTransformation(THREE_START_INDEX, THREE);
-        applyTransformation(FOUR_START_INDEX, FOUR);
-        applyTransformation(FIVE_START_INDEX, FIVE);
-        applyTransformation(SIX_START_INDEX, SIX);
-        applyTransformation(SEVEN_START_INDEX, SEVEN);
-        applyTransformation(EIGHT_START_INDEX, EIGHT);
-        applyTransformation(NINE_START_INDEX, NINE);
-        applyTransformation(TEN_START_INDEX, TEN);
+        applyTransformation(ONE_START_INDEX, ONE_STOP_INDEX, ONE);
+        applyTransformation(TWO_START_INDEX, TWO_STOP_INDEX, TWO);
+        applyTransformation(THREE_START_INDEX, THREE_STOP_INDEX, THREE);
+        applyTransformation(FOUR_START_INDEX, FOUR_STOP_INDEX, FOUR);
+        applyTransformation(FIVE_START_INDEX, FIVE_STOP_INDEX, FIVE);
+        applyTransformation(SIX_START_INDEX, SIX_STOP_INDEX, SIX);
+        applyTransformation(SEVEN_START_INDEX, SEVEN_STOP_INDEX, SEVEN);
+        applyTransformation(EIGHT_START_INDEX, EIGHT_STOP_INDEX, EIGHT);
+        applyTransformation(NINE_START_INDEX, NINE_STOP_INDEX, NINE);
+        applyTransformation(TEN_START_INDEX, TEN_STOP_INDEX, TEN);
 
 
         assertEquals("the transformed string should be correct.", TRANSFORMED_TEXT,
@@ -315,19 +334,13 @@ public class TransformableStringTest {
     @Test(expected = NullPointerException.class)
     public void testTransformSubstringWithNullTransformation() {
 
-        transformableString.transformSubstring(null, ONE_START_INDEX, ONE);
+        transformableString.transformSubstring(null, ONE_START_INDEX, ONE_START_INDEX);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testTransformSubstringWithNullSubString() {
-
-        transformableString.transformSubstring(new NumberTransformation(), ONE_START_INDEX, null);
-    }
-
-    @Test
+    @Test(expected = StringIndexOutOfBoundsException.class)
     public void testTransformSubstringWithInverseIndices() {
 
-        transformableString.transformSubstring(new NumberTransformation(), ONE_STOP_INDEX, ONE);
+        transformableString.transformSubstring(new NumberTransformation(), ONE_STOP_INDEX, ONE_START_INDEX);
     }
 
     @Test
@@ -340,7 +353,7 @@ public class TransformableStringTest {
     @Test
     public void testLengthAfterTransformation() {
 
-        transformableString.transformSubstring(new NumberTransformation(), ONE_START_INDEX, ONE);
+        transformableString.transformSubstring(new NumberTransformation(), ONE_START_INDEX, ONE_STOP_INDEX);
 
         assertThat("the length should be different to the wrapped string after a transformation.", transformableString.length(),
                 not(TEST_TEXT.length()));
@@ -357,7 +370,7 @@ public class TransformableStringTest {
     @Test
     public void testCharAtAfterTransformation() {
 
-        transformableString.transformSubstring(new NumberTransformation(), ONE_START_INDEX, ONE);
+        transformableString.transformSubstring(new NumberTransformation(), ONE_START_INDEX, ONE_STOP_INDEX);
 
         final int INDEX = 20;
 
@@ -378,7 +391,7 @@ public class TransformableStringTest {
     @Test
     public void testSubStringAfterTransformation() {
 
-        transformableString.transformSubstring(new NumberTransformation(), ONE_START_INDEX, ONE);
+        transformableString.transformSubstring(new NumberTransformation(), ONE_START_INDEX, ONE_STOP_INDEX);
 
         final int START = 10;
         final int END = 20;
@@ -387,10 +400,10 @@ public class TransformableStringTest {
                 transformableString.subSequence(START, END), not(TEST_TEXT.subSequence(START, END)));
     }
 
-    private void applyTransformation(int startIndex, String substring) {
+    private void applyTransformation(int startIndex, int stopIndex, String substring) {
 
-        transformableString.transformSubstring(new NumberTransformation(), startIndex, substring);
-        transformableString.transformSubstring(ODD_EVEN_TRANSFORMATION_MAP.get(substring), startIndex, substring);
-        transformableString.transformSubstring(NUMBER_TRANSFORMATION_MAP.get(substring), startIndex, substring);
+        transformableString.transformSubstring(new NumberTransformation(), startIndex, stopIndex);
+        transformableString.transformSubstring(ODD_EVEN_TRANSFORMATION_MAP.get(substring), startIndex, stopIndex);
+        transformableString.transformSubstring(NUMBER_TRANSFORMATION_MAP.get(substring), startIndex, stopIndex);
     }
 }

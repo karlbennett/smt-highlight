@@ -1,4 +1,4 @@
-package shiver.me.timbers;
+package shiver.me.timbers.transform;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,7 +8,7 @@ import static java.util.Collections.unmodifiableMap;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static shiver.me.timbers.NullTransformation.NULL_TRANSFORMATION;
+import static shiver.me.timbers.transform.NullTransformation.NULL_TRANSFORMATION;
 
 /**
  * Utility methods and constants to help with creating tests.
@@ -119,7 +119,7 @@ public final class TestUtils {
     }
 
     /**
-     * Assert that the returned {@link Transformation} is the {@link NullTransformation} for the supplied index.
+     * Assert that the returned {@link Transformation} is the {@link shiver.me.timbers.transform.NullTransformation} for the supplied index.
      */
     public static void assertNullTransformation(Transformations transformations, int index) {
 
@@ -128,7 +128,7 @@ public final class TestUtils {
     }
 
     /**
-     * Assert that the returned {@link Transformation} is the {@link NullTransformation} for the supplied name.
+     * Assert that the returned {@link Transformation} is the {@link shiver.me.timbers.transform.NullTransformation} for the supplied name.
      */
     public static void assertNullTransformation(Transformations transformations, String name) {
 

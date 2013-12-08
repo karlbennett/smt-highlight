@@ -1,4 +1,4 @@
-package shiver.me.timbers;
+package shiver.me.timbers.transform;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,6 @@ import java.util.Map;
 
 import static shiver.me.timbers.Asserts.assertIsNotNull;
 import static shiver.me.timbers.Checks.isNull;
-import static shiver.me.timbers.NullTransformation.NULL_TRANSFORMATION;
 
 /**
  * A collection of individual and possibly unrelated transformations.
@@ -44,7 +43,7 @@ public class IndividualTransformations implements Transformations {
 
         if (indexIsOutOfBounds(index)) {
 
-            return NULL_TRANSFORMATION;
+            return NullTransformation.NULL_TRANSFORMATION;
         }
 
         return transformationList.get(index);
@@ -63,7 +62,7 @@ public class IndividualTransformations implements Transformations {
 
         final Transformation transformation = transformationMap.get(name);
 
-        return isNull(transformation) ? NULL_TRANSFORMATION : transformation;
+        return isNull(transformation) ? NullTransformation.NULL_TRANSFORMATION : transformation;
     }
 
     @Override

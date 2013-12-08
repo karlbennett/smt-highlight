@@ -1,7 +1,7 @@
-package shiver.me.timbers;
+package shiver.me.timbers.transform;
 
 /**
- * This is the minimum suite of tests that must be implemented for any new {@link Transformations} class.
+ * This is the minimum suite of tests that must be implemented for any new {@link shiver.me.timbers.transform.Transformations} class.
  *
  * @author Karl Bennett
  */

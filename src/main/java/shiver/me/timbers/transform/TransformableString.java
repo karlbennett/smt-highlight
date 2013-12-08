@@ -1,4 +1,4 @@
-package shiver.me.timbers;
+package shiver.me.timbers.transform;
 
 import static shiver.me.timbers.Asserts.assertIsNotNull;
 
@@ -11,12 +11,13 @@ public class TransformableString implements CharSequence {
 
     private final StringBuilder transformedMainString;
 
+    private String originalSubString;
     private String currentSubString;
     private int currentStartIndex;
     private int oldOffset;
     private int currentOffset;
     private int actualStartIndex;
-    private int actualLength;
+    private int actualStopIndex;
 
     public TransformableString(String string) {
 
@@ -28,36 +29,43 @@ public class TransformableString implements CharSequence {
         this.currentStartIndex = -1;
     }
 
-    public void transformSubstring(Transformation transformation, int startIndex, String subString) {
+    public void transformSubstring(Transformation transformation, int startIndex, int stopIndex) {
 
         if (isNewWord(getCurrentStartIndex(), startIndex)) {
 
-            updatePresets(startIndex, subString);
+            updatePresets(startIndex, stopIndex);
+
+        } else {
+
+            updateActualIndices(getOldOffset(), getCurrentOffset(), startIndex, stopIndex);
         }
-
-        final int length = subString.length();
-
-        updateActualStartIndex(getOldOffset(), startIndex);
-        updateActualLength(getCurrentOffset(), length);
 
         final String transformedSubString = transformation.apply(getCurrentSubString());
 
-        applyTransformationToMainString(getActualStartIndex(), getActualLength(), transformedSubString);
+        applyTransformationToMainString(getActualStartIndex(), getActualStopIndex(), transformedSubString);
+
+        updateCurrentOffset(getOriginalSubString().length(), transformedSubString.length());
 
         setCurrentSubString(transformedSubString);
-
-        updateCurrentOffset(subString.length(), transformedSubString.length());
     }
 
-    private void updatePresets(int startIndex, String subString) {
+    private void updatePresets(int startIndex, int stopIndex) {
 
         setCurrentStartIndex(startIndex);
 
         updateOldOffset(getCurrentOffset());
-
-        setCurrentSubString(subString);
-
         updateCurrentOffset(0, 0);
+
+        updateActualIndices(getOldOffset(), getCurrentOffset(), startIndex, stopIndex);
+
+        updateOriginalSubString(getActualStartIndex(), getActualStopIndex());
+        setCurrentSubString(getOriginalSubString());
+    }
+
+    private void updateActualIndices(int oldOffset, int currentOffset, int startIndex, int stopIndex) {
+
+        updateActualStartIndex(oldOffset, startIndex);
+        updateActualStopIndex(oldOffset, currentOffset, stopIndex);
     }
 
     boolean isNewWord(int currentIndex, int startIndex) {
@@ -75,14 +83,14 @@ public class TransformableString implements CharSequence {
         actualStartIndex = oldOffset + startIndex;
     }
 
-    void updateActualLength(final int currentOffset, int length) {
+    void updateActualStopIndex(int oldOffset, int currentOffset, int stopIndex) {
 
-        actualLength = currentOffset + length;
+        actualStopIndex = oldOffset + currentOffset + stopIndex;
     }
 
-    void applyTransformationToMainString(int actualStartIndex, int length, String transformedSubString) {
+    void applyTransformationToMainString(int actualStartIndex, int actualStopIndex, String transformedSubString) {
 
-        transformedMainString.replace(actualStartIndex, actualStartIndex + length, transformedSubString);
+        transformedMainString.replace(actualStartIndex, actualStopIndex + 1, transformedSubString);
     }
 
     void updateCurrentOffset(int currentLength, int transformedLength) {
@@ -92,27 +100,37 @@ public class TransformableString implements CharSequence {
         currentOffset = transformedLength - currentLength;
     }
 
-    int getCurrentStartIndex() {
+    void updateOriginalSubString(int startIndex, int stopIndex) {
+
+        this.originalSubString = transformedMainString.substring(startIndex, stopIndex + 1);
+    }
+
+    private int getCurrentStartIndex() {
 
         return currentStartIndex;
     }
 
-    void setCurrentStartIndex(int currentStartIndex) {
+    String getOriginalSubString() {
+
+        return originalSubString;
+    }
+
+    private void setCurrentStartIndex(int currentStartIndex) {
 
         this.currentStartIndex = currentStartIndex;
     }
 
-    String getCurrentSubString() {
+    private String getCurrentSubString() {
 
         return currentSubString;
     }
 
-    void setCurrentSubString(String currentString) {
+    private void setCurrentSubString(String currentString) {
 
         this.currentSubString = currentString;
     }
 
-    int getOldOffset() {
+    private int getOldOffset() {
 
         return oldOffset;
     }
@@ -127,9 +145,9 @@ public class TransformableString implements CharSequence {
         return actualStartIndex;
     }
 
-    int getActualLength() {
+    int getActualStopIndex() {
 
-        return actualLength;
+        return actualStopIndex;
     }
 
     @Override

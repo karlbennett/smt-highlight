@@ -1,20 +1,15 @@
-package shiver.me.timbers;
+package shiver.me.timbers.transform;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Iterator;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static shiver.me.timbers.TestUtils.ONE;
-import static shiver.me.timbers.TestUtils.THREE;
-import static shiver.me.timbers.TestUtils.TWO;
-import static shiver.me.timbers.TestUtils.assertNullTransformation;
-import static shiver.me.timbers.TestUtils.createEmptyIterable;
 
 public class IndividualTransformationsTest implements TransformationsTestTemplate {
 
@@ -29,13 +24,13 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     public void setUp() {
 
         transformationOne = mock(Transformation.class);
-        when(transformationOne.getName()).thenReturn(ONE);
+        when(transformationOne.getName()).thenReturn(TestUtils.ONE);
 
         transformationTwo = mock(Transformation.class);
-        when(transformationTwo.getName()).thenReturn(TWO);
+        when(transformationTwo.getName()).thenReturn(TestUtils.TWO);
 
         transformationThree = mock(Transformation.class);
-        when(transformationThree.getName()).thenReturn(THREE);
+        when(transformationThree.getName()).thenReturn(TestUtils.THREE);
 
         Iterator<Transformation> iterator = mock(Iterator.class);
         when(iterator.hasNext()).thenReturn(true, true, true, false);
@@ -57,7 +52,7 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     @SuppressWarnings({"unchecked", "UnusedDeclaration"})
     public void testCreateWithEmptyIterable() {
 
-        for (Transformation transformation : new IndividualTransformations(createEmptyIterable())) {
+        for (Transformation transformation : new IndividualTransformations(TestUtils.createEmptyIterable())) {
 
             fail("an empty " + Transformations.class.getSimpleName() + " should not iterate.");
         }
@@ -76,13 +71,13 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
 
         Transformations transformations = new IndividualTransformations(TransformationIterable);
 
-        assertEquals("Transformation " + ONE + " should be returned for index 0",
+        Assert.assertEquals("Transformation " + TestUtils.ONE + " should be returned for index 0",
                 transformationOne, transformations.get(0));
 
-        assertEquals("Transformation " + TWO + " should be returned for index 1",
+        Assert.assertEquals("Transformation " + TestUtils.TWO + " should be returned for index 1",
                 transformationTwo, transformations.get(1));
 
-        assertEquals("Transformation " + THREE + " should be returned for index 2",
+        Assert.assertEquals("Transformation " + TestUtils.THREE + " should be returned for index 2",
                 transformationThree, transformations.get(2));
     }
 
@@ -92,7 +87,7 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
 
         Transformations transformations = new IndividualTransformations(TransformationIterable);
 
-        assertNullTransformation(transformations, 3);
+        TestUtils.assertNullTransformation(transformations, 3);
     }
 
     @Test
@@ -101,14 +96,14 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
 
         Transformations transformations = new IndividualTransformations(TransformationIterable);
 
-        assertEquals("Transformation " + ONE + " should be returned for the name " + ONE,
-                transformationOne, transformations.get(ONE));
+        Assert.assertEquals("Transformation " + TestUtils.ONE + " should be returned for the name " + TestUtils.ONE,
+                transformationOne, transformations.get(TestUtils.ONE));
 
-        assertEquals("Transformation " + TWO + " should be returned for the name " + TWO,
-                transformationTwo, transformations.get(TWO));
+        Assert.assertEquals("Transformation " + TestUtils.TWO + " should be returned for the name " + TestUtils.TWO,
+                transformationTwo, transformations.get(TestUtils.TWO));
 
-        assertEquals("Transformation " + THREE + " should be returned for the name " + THREE,
-                transformationThree, transformations.get(THREE));
+        Assert.assertEquals("Transformation " + TestUtils.THREE + " should be returned for the name " + TestUtils.THREE,
+                transformationThree, transformations.get(TestUtils.THREE));
     }
 
     @Test
@@ -117,7 +112,7 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
 
         Transformations transformations = new IndividualTransformations(TransformationIterable);
 
-        assertNullTransformation(transformations, "not a Transformation");
+        TestUtils.assertNullTransformation(transformations, "not a Transformation");
     }
 
     @Test
@@ -126,7 +121,7 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
 
         Transformations transformations = new IndividualTransformations(TransformationIterable);
 
-        assertNullTransformation(transformations, null);
+        TestUtils.assertNullTransformation(transformations, null);
     }
 
     @Test
