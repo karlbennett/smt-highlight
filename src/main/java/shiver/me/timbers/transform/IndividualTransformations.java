@@ -1,12 +1,15 @@
 package shiver.me.timbers.transform;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.singleton;
 import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
 import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 import static shiver.me.timbers.checks.Checks.isNotNull;
@@ -22,18 +25,35 @@ public class IndividualTransformations implements Transformations {
     private final List<Transformation> transformationList;
     private final Map<String, Transformation> transformationMap;
 
-    public IndividualTransformations(Iterable<Transformation>... transformations) {
+    public IndividualTransformations() {
 
-        assertIsNotNull(argumentIsNullMessage("transformations"), transformations);
+        this(Collections.<Transformation>emptySet());
+    }
+
+    public IndividualTransformations(Iterable<Transformation> transformations) {
+
+        this(notNullSingleton(transformations));
+    }
+
+    public IndividualTransformations(Collection<Iterable<Transformation>> multipleTransformations) {
+
+        assertIsNotNull(argumentIsNullMessage("multipleTransformations"), multipleTransformations);
 
         this.transformationList = new ArrayList<Transformation>();
         this.transformationMap = new HashMap<String, Transformation>();
 
-        for (Transformation transformation : new CompactedIterable<Transformation>(transformations)) {
+        for (Transformation transformation : new CompactedIterable<Transformation>(multipleTransformations)) {
 
             this.transformationList.add(transformation);
             this.transformationMap.put(transformation.getName(), transformation);
         }
+    }
+
+    private static Collection<Iterable<Transformation>> notNullSingleton(Iterable<Transformation> transformations) {
+
+        assertIsNotNull(argumentIsNullMessage("transformations"), transformations);
+
+        return singleton(transformations);
     }
 
     /**

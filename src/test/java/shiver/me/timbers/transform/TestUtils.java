@@ -108,14 +108,28 @@ public final class TestUtils {
             }}
     );
 
-    public static Iterable createEmptyIterable() {
+    @SuppressWarnings("unchecked")
+    public static <T> Iterable<T> createEmptyIterable() {
 
-        Iterator iterator = mock(Iterator.class);
+        Iterator<T> iterator = mock(Iterator.class);
 
-        Iterable emptyIterable = mock(Iterable.class);
+        Iterable<T> emptyIterable = mock(Iterable.class);
         when(emptyIterable.iterator()).thenReturn(iterator);
 
         return emptyIterable;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Iterable<T> mockIterable(T one, T two, T three) {
+
+        Iterator<T> iterator = mock(Iterator.class);
+        when(iterator.hasNext()).thenReturn(true, true, true, false);
+        when(iterator.next()).thenReturn(one, two, three);
+
+        final Iterable<T> transformationIterable = mock(Iterable.class);
+        when(transformationIterable.iterator()).thenReturn(iterator);
+
+        return transformationIterable;
     }
 
     /**

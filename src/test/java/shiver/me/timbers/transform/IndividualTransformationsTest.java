@@ -3,7 +3,7 @@ package shiver.me.timbers.transform;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Iterator;
+import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -14,11 +14,8 @@ import static shiver.me.timbers.transform.TestUtils.ONE;
 import static shiver.me.timbers.transform.TestUtils.THREE;
 import static shiver.me.timbers.transform.TestUtils.TWO;
 import static shiver.me.timbers.transform.TestUtils.assertNullTransformation;
-import static shiver.me.timbers.transform.TestUtils.createEmptyIterable;
 
 public class IndividualTransformationsTest implements TransformationsTestTemplate {
-
-    private Iterable<Transformation> transformationIterable;
 
     private Transformation transformationOne;
     private Transformation transformationTwo;
@@ -36,13 +33,6 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
 
         transformationThree = mock(Transformation.class);
         when(transformationThree.getName()).thenReturn(THREE);
-
-        Iterator<Transformation> iterator = mock(Iterator.class);
-        when(iterator.hasNext()).thenReturn(true, true, true, false);
-        when(iterator.next()).thenReturn(transformationOne, transformationTwo, transformationThree);
-
-        transformationIterable = mock(Iterable.class);
-        when(transformationIterable.iterator()).thenReturn(iterator);
     }
 
     @Test
@@ -50,22 +40,23 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     @SuppressWarnings("unchecked")
     public void testCreate() {
 
-        new IndividualTransformations(transformationIterable);
+        new IndividualTransformations(mockIterable());
     }
 
     @Test
     @Override
-    @SuppressWarnings({"unchecked", "UnusedDeclaration"})
+    @SuppressWarnings("UnusedDeclaration")
     public void testCreateWithEmptyIterable() {
 
-        for (Transformation transformation : new IndividualTransformations(createEmptyIterable())) {
+        for (Transformation transformation :
+                new IndividualTransformations(TestUtils.<Transformation>createEmptyIterable())) {
 
             fail("an empty " + Transformations.class.getSimpleName() + " should not iterate.");
         }
     }
 
     @Test
-    @SuppressWarnings({"unchecked", "UnusedDeclaration"})
+    @SuppressWarnings("UnusedDeclaration")
     public void testCreateWithDefaultConstructor() {
 
         for (Transformation transformation : new IndividualTransformations()) {
@@ -79,22 +70,20 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     @Override
     public void testCreateWithNullIterable() {
 
-        new IndividualTransformations(null);
+        new IndividualTransformations((Iterable<Transformation>) null);
     }
 
     @Test(expected = AssertionError.class)
-    @SuppressWarnings("unchecked")
-    public void testCreateWithNullIterableArray() {
+    public void testCreateWithNullIterableCollection() {
 
-        new IndividualTransformations((Iterable<Transformation>[]) null);
+        new IndividualTransformations((Collection<Iterable<Transformation>>) null);
     }
 
     @Test
     @Override
     public void testGetWithIndex() {
 
-        @SuppressWarnings("unchecked")
-        Transformations transformations = new IndividualTransformations(transformationIterable);
+        Transformations transformations = new IndividualTransformations(mockIterable());
 
         assertEquals("Transformation " + ONE + " should be returned for index 0", transformationOne,
                 transformations.get(0));
@@ -110,8 +99,7 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     @Override
     public void testGetWithInvalidIndex() {
 
-        @SuppressWarnings("unchecked")
-        Transformations transformations = new IndividualTransformations(transformationIterable);
+        Transformations transformations = new IndividualTransformations(mockIterable());
 
         assertNullTransformation(transformations, 3);
     }
@@ -120,8 +108,7 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     @Override
     public void testGetWithName() {
 
-        @SuppressWarnings("unchecked")
-        Transformations transformations = new IndividualTransformations(transformationIterable);
+        Transformations transformations = new IndividualTransformations(mockIterable());
 
         assertEquals("Transformation " + ONE + " should be returned for the name " + ONE, transformationOne,
                 transformations.get(ONE));
@@ -137,8 +124,7 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     @Override
     public void testGetWithInvalidName() {
 
-        @SuppressWarnings("unchecked")
-        Transformations transformations = new IndividualTransformations(transformationIterable);
+        Transformations transformations = new IndividualTransformations(mockIterable());
 
         assertNullTransformation(transformations, "not a Transformation");
     }
@@ -147,8 +133,7 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     @Override
     public void testGetWithNullName() {
 
-        @SuppressWarnings("unchecked")
-        Transformations transformations = new IndividualTransformations(transformationIterable);
+        Transformations transformations = new IndividualTransformations(mockIterable());
 
         assertNullTransformation(transformations, null);
     }
@@ -159,6 +144,11 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     public void testIterator() {
 
         assertNotNull("an iterator should be returned",
-                new IndividualTransformations(transformationIterable).iterator());
+                new IndividualTransformations(mockIterable()).iterator());
+    }
+
+    private Iterable<Transformation> mockIterable() {
+
+        return TestUtils.mockIterable(transformationOne, transformationTwo, transformationThree);
     }
 }
