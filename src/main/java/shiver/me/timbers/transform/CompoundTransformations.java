@@ -3,8 +3,8 @@ package shiver.me.timbers.transform;
 import java.util.LinkedList;
 import java.util.List;
 
-import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
+import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 
 /**
  * A collection of transformation names that will all match to the same {@link Transformation#apply(String)} logic.
@@ -13,6 +13,7 @@ import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
  */
 public class CompoundTransformations extends IndividualTransformations {
 
+    @SuppressWarnings("unchecked")
     public CompoundTransformations(Iterable<String> names, Applyer applyer) {
         super(createTransformations(names, applyer));
     }

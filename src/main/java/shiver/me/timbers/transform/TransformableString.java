@@ -1,7 +1,7 @@
 package shiver.me.timbers.transform;
 
-import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
+import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 
 /**
  * A character sequence that can have

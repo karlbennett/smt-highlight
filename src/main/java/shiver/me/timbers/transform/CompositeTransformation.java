@@ -1,7 +1,7 @@
 package shiver.me.timbers.transform;
 
-import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
+import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 
 /**
  * This is a concrete {@code Transformation} that can have it's name and {@link Applyer} set as constructor

@@ -4,8 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
-import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
+import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 
 /**
  * This {@link Transformer} implementation provides some convenience logic for storing {@link Transformations} against a

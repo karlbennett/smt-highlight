@@ -1,19 +1,24 @@
 package shiver.me.timbers.transform;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Iterator;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static shiver.me.timbers.transform.TestUtils.ONE;
+import static shiver.me.timbers.transform.TestUtils.THREE;
+import static shiver.me.timbers.transform.TestUtils.TWO;
+import static shiver.me.timbers.transform.TestUtils.assertNullTransformation;
+import static shiver.me.timbers.transform.TestUtils.createEmptyIterable;
 
 public class IndividualTransformationsTest implements TransformationsTestTemplate {
 
-    private Iterable<Transformation> TransformationIterable;
+    private Iterable<Transformation> transformationIterable;
 
     private Transformation transformationOne;
     private Transformation transformationTwo;
@@ -24,27 +29,28 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     public void setUp() {
 
         transformationOne = mock(Transformation.class);
-        when(transformationOne.getName()).thenReturn(TestUtils.ONE);
+        when(transformationOne.getName()).thenReturn(ONE);
 
         transformationTwo = mock(Transformation.class);
-        when(transformationTwo.getName()).thenReturn(TestUtils.TWO);
+        when(transformationTwo.getName()).thenReturn(TWO);
 
         transformationThree = mock(Transformation.class);
-        when(transformationThree.getName()).thenReturn(TestUtils.THREE);
+        when(transformationThree.getName()).thenReturn(THREE);
 
         Iterator<Transformation> iterator = mock(Iterator.class);
         when(iterator.hasNext()).thenReturn(true, true, true, false);
         when(iterator.next()).thenReturn(transformationOne, transformationTwo, transformationThree);
 
-        TransformationIterable = mock(Iterable.class);
-        when(TransformationIterable.iterator()).thenReturn(iterator);
+        transformationIterable = mock(Iterable.class);
+        when(transformationIterable.iterator()).thenReturn(iterator);
     }
 
     @Test
     @Override
+    @SuppressWarnings("unchecked")
     public void testCreate() {
 
-        new IndividualTransformations(TransformationIterable);
+        new IndividualTransformations(transformationIterable);
     }
 
     @Test
@@ -52,9 +58,20 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     @SuppressWarnings({"unchecked", "UnusedDeclaration"})
     public void testCreateWithEmptyIterable() {
 
-        for (Transformation transformation : new IndividualTransformations(TestUtils.createEmptyIterable())) {
+        for (Transformation transformation : new IndividualTransformations(createEmptyIterable())) {
 
             fail("an empty " + Transformations.class.getSimpleName() + " should not iterate.");
+        }
+    }
+
+    @Test
+    @SuppressWarnings({"unchecked", "UnusedDeclaration"})
+    public void testCreateWithDefaultConstructor() {
+
+        for (Transformation transformation : new IndividualTransformations()) {
+
+            fail("a " + Transformations.class.getSimpleName() +
+                    " created with the default constructor should not iterate.");
         }
     }
 
@@ -65,69 +82,83 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
         new IndividualTransformations(null);
     }
 
+    @Test(expected = AssertionError.class)
+    @SuppressWarnings("unchecked")
+    public void testCreateWithNullIterableArray() {
+
+        new IndividualTransformations((Iterable<Transformation>[]) null);
+    }
+
     @Test
     @Override
     public void testGetWithIndex() {
 
-        Transformations transformations = new IndividualTransformations(TransformationIterable);
+        @SuppressWarnings("unchecked")
+        Transformations transformations = new IndividualTransformations(transformationIterable);
 
-        Assert.assertEquals("Transformation " + TestUtils.ONE + " should be returned for index 0",
-                transformationOne, transformations.get(0));
+        assertEquals("Transformation " + ONE + " should be returned for index 0", transformationOne,
+                transformations.get(0));
 
-        Assert.assertEquals("Transformation " + TestUtils.TWO + " should be returned for index 1",
-                transformationTwo, transformations.get(1));
+        assertEquals("Transformation " + TWO + " should be returned for index 1", transformationTwo,
+                transformations.get(1));
 
-        Assert.assertEquals("Transformation " + TestUtils.THREE + " should be returned for index 2",
-                transformationThree, transformations.get(2));
+        assertEquals("Transformation " + THREE + " should be returned for index 2", transformationThree,
+                transformations.get(2));
     }
 
     @Test
     @Override
     public void testGetWithInvalidIndex() {
 
-        Transformations transformations = new IndividualTransformations(TransformationIterable);
+        @SuppressWarnings("unchecked")
+        Transformations transformations = new IndividualTransformations(transformationIterable);
 
-        TestUtils.assertNullTransformation(transformations, 3);
+        assertNullTransformation(transformations, 3);
     }
 
     @Test
     @Override
     public void testGetWithName() {
 
-        Transformations transformations = new IndividualTransformations(TransformationIterable);
+        @SuppressWarnings("unchecked")
+        Transformations transformations = new IndividualTransformations(transformationIterable);
 
-        Assert.assertEquals("Transformation " + TestUtils.ONE + " should be returned for the name " + TestUtils.ONE,
-                transformationOne, transformations.get(TestUtils.ONE));
+        assertEquals("Transformation " + ONE + " should be returned for the name " + ONE, transformationOne,
+                transformations.get(ONE));
 
-        Assert.assertEquals("Transformation " + TestUtils.TWO + " should be returned for the name " + TestUtils.TWO,
-                transformationTwo, transformations.get(TestUtils.TWO));
+        assertEquals("Transformation " + TWO + " should be returned for the name " + TWO, transformationTwo,
+                transformations.get(TWO));
 
-        Assert.assertEquals("Transformation " + TestUtils.THREE + " should be returned for the name " + TestUtils.THREE,
-                transformationThree, transformations.get(TestUtils.THREE));
+        assertEquals("Transformation " + THREE + " should be returned for the name " + THREE, transformationThree,
+                transformations.get(THREE));
     }
 
     @Test
     @Override
     public void testGetWithInvalidName() {
 
-        Transformations transformations = new IndividualTransformations(TransformationIterable);
+        @SuppressWarnings("unchecked")
+        Transformations transformations = new IndividualTransformations(transformationIterable);
 
-        TestUtils.assertNullTransformation(transformations, "not a Transformation");
+        assertNullTransformation(transformations, "not a Transformation");
     }
 
     @Test
     @Override
     public void testGetWithNullName() {
 
-        Transformations transformations = new IndividualTransformations(TransformationIterable);
+        @SuppressWarnings("unchecked")
+        Transformations transformations = new IndividualTransformations(transformationIterable);
 
-        TestUtils.assertNullTransformation(transformations, null);
+        assertNullTransformation(transformations, null);
     }
 
     @Test
     @Override
+    @SuppressWarnings("unchecked")
     public void testIterator() {
 
-        assertNotNull("an iterator should be returned", new IndividualTransformations(TransformationIterable).iterator());
+        assertNotNull("an iterator should be returned",
+                new IndividualTransformations(transformationIterable).iterator());
     }
 }
