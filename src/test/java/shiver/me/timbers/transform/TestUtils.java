@@ -1,14 +1,18 @@
 package shiver.me.timbers.transform;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static shiver.me.timbers.transform.NullTransformation.NULL_TRANSFORMATION;
@@ -34,7 +38,8 @@ public final class TestUtils {
     public static final String NINE = "nine";
     public static final String TEN = "ten";
 
-    public static final String[] NAMES = {ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN};
+    public static final List<String> NAMES = unmodifiableList(
+            asList(ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN));
 
     public static final String TEST_TEXT = ONE + " " + TWO + " " + THREE + " " + FOUR + " " + FIVE + " " + SIX + " " +
             SEVEN + " " + EIGHT + " " + NINE + " " + TEN;
@@ -145,18 +150,80 @@ public final class TestUtils {
         return transformationIterable;
     }
 
-    /**
-     * Assert that the returned {@link Transformation} is the {@link shiver.me.timbers.transform.NullTransformation} for the supplied index.
-     */
+    public static List<Transformation> mockTransformationList() {
+
+        return mockTransformations(NAMES);
+    }
+
+    public static List<Transformation> mockTransformations(Collection<String> names) {
+
+        final List<Transformation> transformations = new ArrayList<Transformation>(names.size());
+
+        Transformation transformation;
+        for (String name : names) {
+
+            transformation = mock(Transformation.class);
+            when(transformation.getName()).thenReturn(name);
+
+            transformations.add(transformation);
+        }
+
+        return transformations;
+    }
+
+    public static void assertNoIterations(Transformations transformations) {
+
+        for (Transformation transformation : transformations) {
+
+            fail("an empty " + Transformations.class.getSimpleName() + " should not iterate. Transformation: " +
+                    transformation.getName());
+        }
+    }
+
+    public static void assertTransformationsIndices(List<Transformation> transformationList,
+                                                    Transformations transformations) {
+
+        for (int i = 0; i < transformationList.size(); i++) {
+
+            assertEquals("Transformation " + NAMES.get(i) + " should be returned for index " + i,
+                    transformationList.get(i), transformations.get(i));
+        }
+    }
+
+    public static void assertTransformationsHaveCorrectNamesForIndices(Transformations transformations) {
+
+        for (int i = 0; i < NAMES.size(); i++) {
+
+            assertEquals("a Transformation with the name " + NAMES.get(i) + " should be returned for index " + i,
+                    NAMES.get(i), transformations.get(i).getName());
+        }
+    }
+
+    public static void assertTransformationsNames(List<Transformation> transformationList,
+                                                  Transformations transformations) {
+
+        for (int i = 0; i < transformationList.size(); i++) {
+
+            assertEquals("Transformation " + NAMES.get(i) + " should be returned for index " + i,
+                    transformationList.get(i), transformations.get(NAMES.get(i)));
+        }
+    }
+
+    public static void assertTransformationsHaveCorrectNamesForNames(Transformations transformations) {
+
+        for (int i = 0; i < NAMES.size(); i++) {
+
+            assertEquals("a Transformation with the name " + NAMES.get(i) + " should be returned for index " + i,
+                    NAMES.get(i), transformations.get(NAMES.get(i)).getName());
+        }
+    }
+
     public static void assertNullTransformation(Transformations transformations, int index) {
 
         assertEquals("the null Transformation should be returned for the index " + index, NULL_TRANSFORMATION,
                 transformations.get(index));
     }
 
-    /**
-     * Assert that the returned {@link Transformation} is the {@link shiver.me.timbers.transform.NullTransformation} for the supplied name.
-     */
     public static void assertNullTransformation(Transformations transformations, String name) {
 
         assertEquals("the null Transformation should be returned for the name " + name, NULL_TRANSFORMATION,

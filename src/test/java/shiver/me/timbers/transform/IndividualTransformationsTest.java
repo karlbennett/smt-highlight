@@ -2,60 +2,42 @@ package shiver.me.timbers.transform;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static shiver.me.timbers.transform.TestUtils.FIVE;
-import static shiver.me.timbers.transform.TestUtils.FOUR;
-import static shiver.me.timbers.transform.TestUtils.NAMES;
-import static shiver.me.timbers.transform.TestUtils.ONE;
-import static shiver.me.timbers.transform.TestUtils.SIX;
-import static shiver.me.timbers.transform.TestUtils.THREE;
-import static shiver.me.timbers.transform.TestUtils.TWO;
+import static shiver.me.timbers.transform.TestUtils.assertNoIterations;
 import static shiver.me.timbers.transform.TestUtils.assertNullTransformation;
+import static shiver.me.timbers.transform.TestUtils.assertTransformationsIndices;
+import static shiver.me.timbers.transform.TestUtils.assertTransformationsNames;
 import static shiver.me.timbers.transform.TestUtils.mockIterable;
+import static shiver.me.timbers.transform.TestUtils.mockTransformationList;
 
 public class IndividualTransformationsTest implements TransformationsTestTemplate {
-
-    private List<Transformation> transformationList;
 
     @Test
     @Override
     @SuppressWarnings("unchecked")
     public void testCreate() {
 
-        new IndividualTransformations(givenTheIterableIsMocked());
+        final List<Transformation> transformationList = mockTransformationList();
+
+        new IndividualTransformations(mockIterable(transformationList));
     }
 
     @Test
     @Override
-    @SuppressWarnings("UnusedDeclaration")
     public void testCreateWithEmptyIterable() {
 
-        for (Transformation transformation :
-                new IndividualTransformations(Collections.<Transformation>emptySet())) {
-
-            fail("an empty " + Transformations.class.getSimpleName() + " should not iterate.");
-        }
+        assertNoIterations(new IndividualTransformations(Collections.<Transformation>emptySet()));
     }
 
     @Test
-    @SuppressWarnings("UnusedDeclaration")
     public void testCreateWithDefaultConstructor() {
 
-        for (Transformation transformation : new IndividualTransformations()) {
-
-            fail("a " + Transformations.class.getSimpleName() +
-                    " created with the default constructor should not iterate.");
-        }
+        assertNoIterations(new IndividualTransformations());
     }
 
     @Test(expected = AssertionError.class)
@@ -75,82 +57,45 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     @Override
     public void testGetWithIndex() {
 
-        final Iterable<Transformation> iterable = givenTheIterableIsMocked();
+        final List<Transformation> transformationList = mockTransformationList();
 
-        Transformations transformations = new IndividualTransformations(iterable);
+        final Iterable<Transformation> iterable = mockIterable(transformationList);
 
-        for (int i = 0; i < transformationList.size(); i++) {
-
-            assertEquals("Transformation " + NAMES[i] + " should be returned for index " + i, transformationList.get(i),
-                    transformations.get(i));
-        }
-    }
-
-    @Test
-    public void testGetWithIndexWithMultipleIterables() {
-
-        givenTheTransformationsAreMocked();
-
-        final Iterable<Transformation> iterableOne = mockIterable(transformationList.subList(0, 3));
-        final Iterable<Transformation> iterableTwo = mockIterable(transformationList.subList(3, 6));
-
-        @SuppressWarnings("unchecked")
-        Transformations transformations = new IndividualTransformations(asList(iterableOne, iterableTwo));
-
-        for (int i = 0; i < transformationList.size(); i++) {
-
-            assertEquals("Transformation " + NAMES[i] + " should be returned for index " + i, transformationList.get(i),
-                    transformations.get(i));
-        }
-    }
-
-    @Test
-    @Override
-    public void testGetWithInvalidIndex() {
-
-        Transformations transformations = new IndividualTransformations(givenTheIterableIsMocked());
-
-        assertNullTransformation(transformations, transformationList.size());
+        assertTransformationsIndices(transformationList,
+                new IndividualTransformations(iterable));
     }
 
     @Test
     @Override
     public void testGetWithName() {
 
-        final Iterable<Transformation> iterable = givenTheIterableIsMocked();
+        final List<Transformation> transformationList = mockTransformationList();
 
-        Transformations transformations = new IndividualTransformations(iterable);
+        final Iterable<Transformation> iterable = mockIterable(transformationList);
 
-        for (int i = 0; i < transformationList.size(); i++) {
-
-            assertEquals("Transformation " + NAMES[i] + " should be returned for index " + i, transformationList.get(i),
-                    transformations.get(NAMES[i]));
-        }
+        assertTransformationsNames(transformationList,
+                new IndividualTransformations(iterable));
     }
 
     @Test
-    public void testGetWithNameWithMultipleIterables() {
+    @Override
+    public void testGetWithInvalidIndex() {
 
-        givenTheTransformationsAreMocked();
+        final List<Transformation> transformationList = mockTransformationList();
 
-        final Iterable<Transformation> iterableOne = mockIterable(transformationList.subList(0, 3));
-        final Iterable<Transformation> iterableTwo = mockIterable(transformationList.subList(3, 6));
+        Transformations transformations = new IndividualTransformations(mockIterable(transformationList));
 
-        @SuppressWarnings("unchecked")
-        Transformations transformations = new IndividualTransformations(asList(iterableOne, iterableTwo));
-
-        for (int i = 0; i < transformationList.size(); i++) {
-
-            assertEquals("Transformation " + NAMES[i] + " should be returned for index " + i, transformationList.get(i),
-                    transformations.get(NAMES[i]));
-        }
+        assertNullTransformation(transformations, -1);
+        assertNullTransformation(transformations, transformationList.size());
     }
 
     @Test
     @Override
     public void testGetWithInvalidName() {
 
-        Transformations transformations = new IndividualTransformations(givenTheIterableIsMocked());
+        final List<Transformation> transformationList = mockTransformationList();
+
+        Transformations transformations = new IndividualTransformations(mockIterable(transformationList));
 
         assertNullTransformation(transformations, "not a Transformation");
     }
@@ -159,45 +104,47 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     @Override
     public void testGetWithNullName() {
 
-        Transformations transformations = new IndividualTransformations(givenTheIterableIsMocked());
+        final List<Transformation> transformationList = mockTransformationList();
+
+        Transformations transformations = new IndividualTransformations(mockIterable(transformationList));
 
         assertNullTransformation(transformations, null);
     }
 
     @Test
+    @SuppressWarnings("unchecked")
+    public void testGetWithIndexWithMultipleIterables() {
+
+        final List<Transformation> transformationList = mockTransformationList();
+
+        final Iterable<Transformation> iterableOne = TestUtils.mockIterable(transformationList.subList(0, 5));
+        final Iterable<Transformation> iterableTwo = TestUtils.mockIterable(transformationList.subList(5, 10));
+
+        assertTransformationsIndices(transformationList,
+                new IndividualTransformations(asList(iterableOne, iterableTwo)));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testGetWithNameWithMultipleIterables() {
+
+        final List<Transformation> transformationList = mockTransformationList();
+
+        final Iterable<Transformation> iterableOne = TestUtils.mockIterable(transformationList.subList(0, 5));
+        final Iterable<Transformation> iterableTwo = TestUtils.mockIterable(transformationList.subList(5, 10));
+
+        assertTransformationsNames(transformationList,
+                new IndividualTransformations(asList(iterableOne, iterableTwo)));
+    }
+
+    @Test
     @Override
     @SuppressWarnings("unchecked")
-    public void testIterator() {
+    public void testIteratorIsNotNull() {
+
+        final List<Transformation> transformationList = mockTransformationList();
 
         assertNotNull("an iterator should be returned",
-                new IndividualTransformations(givenTheIterableIsMocked()).iterator());
-    }
-
-    private Iterable<Transformation> givenTheIterableIsMocked() {
-
-        givenTheTransformationsAreMocked();
-
-        return TestUtils.mockIterable(transformationList);
-    }
-
-    private void givenTheTransformationsAreMocked() {
-
-        transformationList = mockTransformations(ONE, TWO, THREE, FOUR, FIVE, SIX);
-    }
-
-    private static List<Transformation> mockTransformations(String... names) {
-
-        final List<Transformation> transformations = new ArrayList<Transformation>(names.length);
-
-        Transformation transformation;
-        for (String name : names) {
-
-            transformation = mock(Transformation.class);
-            when(transformation.getName()).thenReturn(name);
-
-            transformations.add(transformation);
-        }
-
-        return transformations;
+                new IndividualTransformations(mockIterable(transformationList)).iterator());
     }
 }

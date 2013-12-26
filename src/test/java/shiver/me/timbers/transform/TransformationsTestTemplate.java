@@ -24,5 +24,5 @@ public interface TransformationsTestTemplate {
 
     public void testGetWithNullName();
 
-    public void testIterator();
+    public void testIteratorIsNotNull();
 }
