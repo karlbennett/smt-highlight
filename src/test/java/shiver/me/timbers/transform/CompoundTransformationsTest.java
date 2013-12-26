@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -39,7 +41,7 @@ public class CompoundTransformationsTest implements TransformationsTestTemplate 
     public void testCreateWithEmptyIterable() {
 
         for (Transformation transformation :
-                new CompoundTransformations(TestUtils.<String>createEmptyIterable(), applyer)) {
+                new CompoundTransformations(Collections.<String>emptySet(), applyer)) {
 
             fail("an empty " + Transformations.class.getSimpleName() + " should not iterate.");
         }

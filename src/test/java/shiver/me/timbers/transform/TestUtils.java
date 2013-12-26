@@ -1,9 +1,12 @@
 package shiver.me.timbers.transform;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableMap;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -30,6 +33,8 @@ public final class TestUtils {
     public static final String EIGHT = "eight";
     public static final String NINE = "nine";
     public static final String TEN = "ten";
+
+    public static final String[] NAMES = {ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN};
 
     public static final String TEST_TEXT = ONE + " " + TWO + " " + THREE + " " + FOUR + " " + FIVE + " " + SIX + " " +
             SEVEN + " " + EIGHT + " " + NINE + " " + TEN;
@@ -108,23 +113,31 @@ public final class TestUtils {
             }}
     );
 
-    @SuppressWarnings("unchecked")
-    public static <T> Iterable<T> createEmptyIterable() {
+    public static <T> Iterable<T> mockIterable(T... elements) {
 
-        Iterator<T> iterator = mock(Iterator.class);
-
-        Iterable<T> emptyIterable = mock(Iterable.class);
-        when(emptyIterable.iterator()).thenReturn(iterator);
-
-        return emptyIterable;
+        return mockIterable(asList(elements));
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Iterable<T> mockIterable(T one, T two, T three) {
+    public static <T> Iterable<T> mockIterable(List<T> elements) {
 
         Iterator<T> iterator = mock(Iterator.class);
-        when(iterator.hasNext()).thenReturn(true, true, true, false);
-        when(iterator.next()).thenReturn(one, two, three);
+
+        if (0 >= elements.size()) {
+
+            when(iterator.hasNext()).thenReturn(false);
+
+        } else {
+
+            final Boolean[] returns = new Boolean[elements.size()];
+            Arrays.fill(returns, true);
+            returns[returns.length - 1] = false;
+
+            when(iterator.hasNext()).thenReturn(true, returns);
+        }
+
+        when(iterator.next()).thenReturn(elements.get(0),
+                elements.subList(1, elements.size()).toArray((T[]) new Object[elements.size() - 1]));
 
         final Iterable<T> transformationIterable = mock(Iterable.class);
         when(transformationIterable.iterator()).thenReturn(iterator);
