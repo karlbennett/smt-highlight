@@ -1,6 +1,7 @@
 package shiver.me.timbers.transform;
 
-import static shiver.me.timbers.Asserts.assertIsNotNull;
+import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
+import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
 
 /**
  * This is a concrete {@code Transformation} that can have it's name and {@link Applyer} set as constructor
@@ -15,8 +16,8 @@ public class CompositeTransformation implements Transformation {
 
     public CompositeTransformation(String name, Applyer applyer) {
 
-        assertIsNotNull(CompositeTransformation.class.getSimpleName() + " name argument cannot be null.", name);
-        assertIsNotNull(CompositeTransformation.class.getSimpleName() + " applyer argument cannot be null.", applyer);
+        assertIsNotNull(argumentIsNullMessage("name"), name);
+        assertIsNotNull(argumentIsNullMessage("applyer"), applyer);
 
         this.name = name;
         this.applyer = applyer;

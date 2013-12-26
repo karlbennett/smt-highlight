@@ -3,7 +3,8 @@ package shiver.me.timbers.transform;
 import java.util.LinkedList;
 import java.util.List;
 
-import static shiver.me.timbers.Asserts.assertIsNotNull;
+import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
+import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
 
 /**
  * A collection of transformation names that will all match to the same {@link Transformation#apply(String)} logic.
@@ -18,8 +19,8 @@ public class CompoundTransformations extends IndividualTransformations {
 
     private static Iterable<Transformation> createTransformations(Iterable<String> names, final Applyer applyer) {
 
-        assertIsNotNull(CompoundTransformations.class.getSimpleName() + " names argument cannot be null.", names);
-        assertIsNotNull(CompoundTransformations.class.getSimpleName() + " applyer argument cannot be null.", applyer);
+        assertIsNotNull(argumentIsNullMessage("names"), names);
+        assertIsNotNull(argumentIsNullMessage("applyer"), applyer);
 
         final List<Transformation> transformations = new LinkedList<Transformation>();
 

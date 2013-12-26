@@ -1,6 +1,7 @@
 package shiver.me.timbers.transform;
 
-import static shiver.me.timbers.Asserts.assertIsNotNull;
+import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
+import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
 
 /**
  * A character sequence that can have
@@ -21,7 +22,7 @@ public class TransformableString implements CharSequence {
 
     public TransformableString(String string) {
 
-        assertIsNotNull(TransformableString.class.getSimpleName() + " string argument cannot be null.", string);
+        assertIsNotNull(argumentIsNullMessage("string"), string);
 
         this.transformedMainString = new StringBuilder(string);
 

@@ -7,8 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static shiver.me.timbers.Asserts.assertIsNotNull;
-import static shiver.me.timbers.Checks.isNull;
+import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
+import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
+import static shiver.me.timbers.checks.Checks.isNull;
 
 /**
  * A collection of individual and possibly unrelated transformations.
@@ -22,8 +23,7 @@ public class IndividualTransformations implements Transformations {
 
     public IndividualTransformations(Iterable<Transformation> transformations) {
 
-        assertIsNotNull(IndividualTransformations.class.getSimpleName() + " transformations argument cannot be null.",
-                transformations);
+        assertIsNotNull(argumentIsNullMessage("transformations"), transformations);
 
         this.transformationList = new ArrayList<Transformation>();
         this.transformationMap = new HashMap<String, Transformation>();

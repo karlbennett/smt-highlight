@@ -4,7 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
-import static shiver.me.timbers.Asserts.assertIsNotNull;
+import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
+import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
 
 /**
  * This {@link Transformer} implementation provides some convenience logic for storing {@link Transformations} against a
@@ -28,10 +29,8 @@ public class WrappedTransformer implements Transformer {
      */
     public WrappedTransformer(Transformer transformer, Transformations transformations) {
 
-        assertIsNotNull(WrappedTransformer.class.getSimpleName() + " transformer argument cannot be null.",
-                transformer);
-        assertIsNotNull(WrappedTransformer.class.getSimpleName() + " transformations argument cannot be null.",
-                transformations);
+        assertIsNotNull(argumentIsNullMessage("transformer"), transformer);
+        assertIsNotNull(argumentIsNullMessage("transformations"), transformations);
 
         this.transformer = transformer;
         this.transformations = transformations;
