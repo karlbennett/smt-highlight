@@ -49,10 +49,6 @@
             <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
-                <configuration>
-                    <message>This should not promote.</message>
-                    <dryRun>true</dryRun>
-                </configuration>
             </plugin>
         </plugins>
     </build>
