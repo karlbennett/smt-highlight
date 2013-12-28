@@ -8,17 +8,17 @@ How ever it does contain some helper classes.
 
 #### ApplyableTransformation
 
-This is a very simple abstract implementation of the [`Transformation`]() interface that allows the [`Applyer`]() half
+This is a very simple abstract implementation of the [`Transformation`]() interface that allows the [`Applier`]() half
 of the `Transformation` to be set as a constructor dependency.
 
 #### CompoundTransformations
 
 A [`Transformations`]() implementation that is used to relate a collection of `Transformation` names to a single
-`Applyer` instance.
+`Applier` instance.
 
 ```java
 Transformations transformations = new CompoundTransformations(asList("one", "two", "three"),
-    new Applyer() {
+    new Applier() {
 
         @Override
         public String apply(String string) {
