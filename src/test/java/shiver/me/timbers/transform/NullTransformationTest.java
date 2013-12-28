@@ -2,7 +2,7 @@ package shiver.me.timbers.transform;
 
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -50,6 +50,6 @@ public class NullTransformationTest {
     public void testHashCode() {
 
         assertThat("the null Transformation hascode should return a non zero value.", NULL_TRANSFORMATION.hashCode(),
-                greaterThan(0));
+                not(0));
     }
 }
