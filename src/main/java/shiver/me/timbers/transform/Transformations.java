@@ -5,5 +5,5 @@ package shiver.me.timbers.transform;
  *
  * @author Karl Bennett
  */
-public interface Transformations extends Container<String, Transformation> {
+public interface Transformations<T extends Transformation> extends Container<String, T> {
 }

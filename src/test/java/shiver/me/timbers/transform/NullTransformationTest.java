@@ -20,14 +20,6 @@ public class NullTransformationTest {
     }
 
     @Test
-    public void testApply() {
-
-        final String TEST_STRING = "test string";
-
-        assertEquals("the null Transformation apply should do nothing.", TEST_STRING, NULL_TRANSFORMATION.apply(TEST_STRING));
-    }
-
-    @Test
     public void testEquals() {
 
         assertTrue("the null Transformation equals should work.", NULL_TRANSFORMATION.equals(new NullTransformation()));

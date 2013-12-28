@@ -8,6 +8,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNotNull;
+import static shiver.me.timbers.transform.NullTransformation.NULL_TRANSFORMATION;
 import static shiver.me.timbers.transform.TestUtils.assertNoIterations;
 import static shiver.me.timbers.transform.TestUtils.assertNullTransformation;
 import static shiver.me.timbers.transform.TestUtils.assertTransformationsIndices;
@@ -19,38 +20,38 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
 
     @Test
     @Override
-    @SuppressWarnings("unchecked")
     public void testCreate() {
 
         final List<Transformation> transformationList = mockTransformationList();
 
-        new IndividualTransformations(mockIterable(transformationList));
+        new IndividualTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION);
     }
 
     @Test
     @Override
     public void testCreateWithEmptyIterable() {
 
-        assertNoIterations(new IndividualTransformations(Collections.<Transformation>emptySet()));
+        assertNoIterations(
+                new IndividualTransformations<Transformation>(Collections.<Transformation>emptySet(), NULL_TRANSFORMATION));
     }
 
     @Test
     public void testCreateWithDefaultConstructor() {
 
-        assertNoIterations(new IndividualTransformations());
+        assertNoIterations(new IndividualTransformations<Transformation>(NULL_TRANSFORMATION));
     }
 
     @Test(expected = AssertionError.class)
     @Override
     public void testCreateWithNullIterable() {
 
-        new IndividualTransformations((Iterable<Transformation>) null);
+        new IndividualTransformations<Transformation>((Iterable<Transformation>) null, NULL_TRANSFORMATION);
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithNullIterableCollection() {
 
-        new IndividualTransformations((Collection<Iterable<Transformation>>) null);
+        new IndividualTransformations<Transformation>((Collection<Iterable<Transformation>>) null, NULL_TRANSFORMATION);
     }
 
     @Test
@@ -62,7 +63,7 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
         final Iterable<Transformation> iterable = mockIterable(transformationList);
 
         assertTransformationsIndices(transformationList,
-                new IndividualTransformations(iterable));
+                new IndividualTransformations<Transformation>(iterable, NULL_TRANSFORMATION));
     }
 
     @Test
@@ -74,7 +75,7 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
         final Iterable<Transformation> iterable = mockIterable(transformationList);
 
         assertTransformationsNames(transformationList,
-                new IndividualTransformations(iterable));
+                new IndividualTransformations<Transformation>(iterable, NULL_TRANSFORMATION));
     }
 
     @Test
@@ -83,7 +84,8 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
 
         final List<Transformation> transformationList = mockTransformationList();
 
-        Transformations transformations = new IndividualTransformations(mockIterable(transformationList));
+        Transformations<Transformation> transformations =
+                new IndividualTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION);
 
         assertNullTransformation(transformations, -1);
         assertNullTransformation(transformations, transformationList.size());
@@ -95,7 +97,8 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
 
         final List<Transformation> transformationList = mockTransformationList();
 
-        Transformations transformations = new IndividualTransformations(mockIterable(transformationList));
+        Transformations<Transformation> transformations =
+                new IndividualTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION);
 
         assertNullTransformation(transformations, "not a Transformation");
     }
@@ -106,7 +109,8 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
 
         final List<Transformation> transformationList = mockTransformationList();
 
-        Transformations transformations = new IndividualTransformations(mockIterable(transformationList));
+        Transformations<Transformation> transformations =
+                new IndividualTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION);
 
         assertNullTransformation(transformations, null);
     }
@@ -121,7 +125,7 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
         final Iterable<Transformation> iterableTwo = TestUtils.mockIterable(transformationList.subList(5, 10));
 
         assertTransformationsIndices(transformationList,
-                new IndividualTransformations(asList(iterableOne, iterableTwo)));
+                new IndividualTransformations<Transformation>(asList(iterableOne, iterableTwo), NULL_TRANSFORMATION));
     }
 
     @Test
@@ -134,7 +138,7 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
         final Iterable<Transformation> iterableTwo = TestUtils.mockIterable(transformationList.subList(5, 10));
 
         assertTransformationsNames(transformationList,
-                new IndividualTransformations(asList(iterableOne, iterableTwo)));
+                new IndividualTransformations<Transformation>(asList(iterableOne, iterableTwo), NULL_TRANSFORMATION));
     }
 
     @Test
@@ -145,6 +149,7 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
         final List<Transformation> transformationList = mockTransformationList();
 
         assertNotNull("an iterator should be returned",
-                new IndividualTransformations(mockIterable(transformationList)).iterator());
+                new IndividualTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION)
+                        .iterator());
     }
 }

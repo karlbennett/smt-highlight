@@ -19,15 +19,6 @@ public class NullTransformation implements Transformation {
         return NullTransformation.class.getSimpleName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String apply(String string) {
-
-        return string;
-    }
-
     @Override
     public boolean equals(Object o) {
 

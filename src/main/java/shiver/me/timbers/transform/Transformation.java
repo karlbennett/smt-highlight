@@ -5,7 +5,7 @@ package shiver.me.timbers.transform;
  *
  * @author Karl Bennett
  */
-public interface Transformation extends Applyer {
+public interface Transformation {
 
     /**
      * The name of the {@code Transformation} indicates the type of {@code String}s that the transformation should be

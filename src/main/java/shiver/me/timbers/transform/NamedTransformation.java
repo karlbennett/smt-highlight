@@ -9,29 +9,20 @@ import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
  *
  * @author Karl Bennett
  */
-public class CompositeTransformation implements Transformation {
+public class NamedTransformation implements Transformation {
 
     private final String name;
-    private final Applyer applyer;
 
-    public CompositeTransformation(String name, Applyer applyer) {
+    public NamedTransformation(String name) {
 
         assertIsNotNull(argumentIsNullMessage("name"), name);
-        assertIsNotNull(argumentIsNullMessage("applyer"), applyer);
 
         this.name = name;
-        this.applyer = applyer;
     }
 
     @Override
     public String getName() {
 
         return name;
-    }
-
-    @Override
-    public String apply(String string) {
-
-        return applyer.apply(string);
     }
 }

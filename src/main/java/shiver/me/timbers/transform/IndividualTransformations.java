@@ -13,43 +13,47 @@ import static java.util.Collections.singleton;
 import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
 import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 import static shiver.me.timbers.checks.Checks.isNotNull;
-import static shiver.me.timbers.transform.NullTransformation.NULL_TRANSFORMATION;
 
 /**
  * A collection of individual and possibly unrelated transformations.
  *
  * @author Karl Bennett
  */
-public class IndividualTransformations implements Transformations {
+public class IndividualTransformations<T extends Transformation> implements Transformations<T> {
 
-    private final List<Transformation> transformationList;
-    private final Map<String, Transformation> transformationMap;
+    private final List<T> transformationList;
+    private final Map<String, T> transformationMap;
+    private final T nullTransformation;
 
-    public IndividualTransformations() {
+    public IndividualTransformations(T nullTransformation) {
 
-        this(Collections.<Transformation>emptySet());
+        this(Collections.<T>emptySet(), nullTransformation);
     }
 
-    public IndividualTransformations(Iterable<Transformation> transformations) {
+    public IndividualTransformations(Iterable<T> transformations, T nullTransformation) {
 
-        this(notNullSingleton(transformations));
+        this(notNullSingleton(transformations), nullTransformation);
     }
 
-    public IndividualTransformations(Collection<Iterable<Transformation>> multipleTransformations) {
+    public IndividualTransformations(Collection<Iterable<T>> multipleTransformations,
+                                     T nullTransformation) {
 
         assertIsNotNull(argumentIsNullMessage("multipleTransformations"), multipleTransformations);
+        assertIsNotNull(argumentIsNullMessage("nullTransformation"), nullTransformation);
 
-        this.transformationList = new ArrayList<Transformation>();
-        this.transformationMap = new HashMap<String, Transformation>();
+        this.transformationList = new ArrayList<T>();
+        this.transformationMap = new HashMap<String, T>();
 
-        for (Transformation transformation : new CompactedIterable<Transformation>(multipleTransformations)) {
+        for (T transformation : new CompactedIterable<T>(multipleTransformations)) {
 
             this.transformationList.add(transformation);
             this.transformationMap.put(transformation.getName(), transformation);
         }
+
+        this.nullTransformation = nullTransformation;
     }
 
-    private static Collection<Iterable<Transformation>> notNullSingleton(Iterable<Transformation> transformations) {
+    private static <T> Collection<Iterable<T>> notNullSingleton(Iterable<T> transformations) {
 
         assertIsNotNull(argumentIsNullMessage("transformations"), transformations);
 
@@ -60,11 +64,11 @@ public class IndividualTransformations implements Transformations {
      * {@inheritDoc}
      */
     @Override
-    public Transformation get(int index) {
+    public T get(int index) {
 
         if (indexIsOutOfBounds(index)) {
 
-            return NULL_TRANSFORMATION;
+            return nullTransformation;
         }
 
         return transformationList.get(index);
@@ -79,16 +83,16 @@ public class IndividualTransformations implements Transformations {
      * {@inheritDoc}
      */
     @Override
-    public Transformation get(String name) {
+    public T get(String name) {
 
-        final Transformation transformation = transformationMap.get(name);
+        final T transformation = transformationMap.get(name);
 
-        return isNotNull(transformation) ? transformation : NULL_TRANSFORMATION;
+        return isNotNull(transformation) ? transformation : nullTransformation;
     }
 
     @Override
-    public Iterator<Transformation> iterator() {
+    public Iterator<T> iterator() {
         // We create a copy of the list so that it can't be mutated with the returned iterator.
-        return new LinkedList<Transformation>(transformationList).iterator();
+        return new LinkedList<T>(transformationList).iterator();
     }
 }

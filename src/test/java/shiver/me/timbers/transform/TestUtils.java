@@ -91,7 +91,7 @@ public final class TestUtils {
         return transformations;
     }
 
-    public static void assertNoIterations(Transformations transformations) {
+    public static void assertNoIterations(Transformations<Transformation> transformations) {
 
         for (Transformation transformation : transformations) {
 
@@ -110,17 +110,8 @@ public final class TestUtils {
         }
     }
 
-    public static void assertTransformationsHaveCorrectNamesForIndices(Transformations transformations) {
-
-        for (int i = 0; i < NAMES.size(); i++) {
-
-            assertEquals("a Transformation with the name " + NAMES.get(i) + " should be returned for index " + i,
-                    NAMES.get(i), transformations.get(i).getName());
-        }
-    }
-
     public static void assertTransformationsNames(List<Transformation> transformationList,
-                                                  Transformations transformations) {
+                                                  Transformations<Transformation> transformations) {
 
         for (int i = 0; i < transformationList.size(); i++) {
 
@@ -129,22 +120,13 @@ public final class TestUtils {
         }
     }
 
-    public static void assertTransformationsHaveCorrectNamesForNames(Transformations transformations) {
-
-        for (int i = 0; i < NAMES.size(); i++) {
-
-            assertEquals("a Transformation with the name " + NAMES.get(i) + " should be returned for index " + i,
-                    NAMES.get(i), transformations.get(NAMES.get(i)).getName());
-        }
-    }
-
-    public static void assertNullTransformation(Transformations transformations, int index) {
+    public static void assertNullTransformation(Transformations<Transformation> transformations, int index) {
 
         assertEquals("the null Transformation should be returned for the index " + index, NULL_TRANSFORMATION,
                 transformations.get(index));
     }
 
-    public static void assertNullTransformation(Transformations transformations, String name) {
+    public static void assertNullTransformation(Transformations<Transformation> transformations, String name) {
 
         assertEquals("the null Transformation should be returned for the name " + name, NULL_TRANSFORMATION,
                 transformations.get(name));
