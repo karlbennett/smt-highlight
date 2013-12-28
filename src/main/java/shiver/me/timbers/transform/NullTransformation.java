@@ -1,8 +1,7 @@
 package shiver.me.timbers.transform;
 
 /**
- * This transformation should be returned when no matching transformation can be found. It has no name and it's apply
- * method just returns the supplied {@code Sting} without any modification.
+ * This transformation should be returned when no matching transformation can be found.
  *
  * @author Karl Bennett
  */
