@@ -4,8 +4,7 @@ import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
 import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 
 /**
- * This is a concrete {@code Transformation} that can have it's name and {@link Applyer} set as constructor
- * dependencies.
+ * This is a concrete {@code Transformation} that can have it's name set as constructor dependency.
  *
  * @author Karl Bennett
  */
