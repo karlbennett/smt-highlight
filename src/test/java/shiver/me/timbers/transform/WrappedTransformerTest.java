@@ -20,42 +20,45 @@ public class WrappedTransformerTest {
 
     private static final String TEXT = "this is a test";
 
-    private Transformer mockTransformer;
-    private Transformations transformations;
+    private Transformer<Transformation> mockTransformer;
+    private Transformations<Transformation> transformations;
     private InputStream stream;
+    private WrappedTransformer<Transformation> wrappedTransformer;
 
     @Before
+    @SuppressWarnings("unchecked")
     public void setUp() {
 
         mockTransformer = mock(Transformer.class);
         transformations = mock(Transformations.class);
         stream = mock(InputStream.class);
+
+        wrappedTransformer = new WrappedTransformer<Transformation>(mockTransformer, transformations);
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testCreate() {
 
-        new WrappedTransformer(mock(Transformer.class), transformations);
+        new WrappedTransformer<Transformation>(mock(Transformer.class), transformations);
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithNullTransformation() {
 
-        new WrappedTransformer(null, transformations);
+        new WrappedTransformer<Transformation>(null, transformations);
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithNullTransformations() {
 
-        new WrappedTransformer(mockTransformer, null);
+        new WrappedTransformer<Transformation>(mockTransformer, null);
     }
 
     @Test
     public void testTransformationWithInputStreamAndTransformations() {
 
-        final WrappedTransformer Transformation = new WrappedTransformer(mockTransformer, transformations);
-
-        Transformation.transform(stream, transformations);
+        wrappedTransformer.transform(stream, transformations);
 
         verify(mockTransformer, times(1)).transform(stream, transformations);
     }
@@ -63,9 +66,7 @@ public class WrappedTransformerTest {
     @Test
     public void testTransformationWithNullInputStreamAndTransformations() {
 
-        final WrappedTransformer Transformation = new WrappedTransformer(mockTransformer, transformations);
-
-        Transformation.transform((InputStream) null, transformations);
+        wrappedTransformer.transform((InputStream) null, transformations);
 
         verify(mockTransformer, times(1)).transform(null, transformations);
     }
@@ -73,9 +74,7 @@ public class WrappedTransformerTest {
     @Test
     public void testTransformationWithInputStreamAndNullTransformations() {
 
-        final WrappedTransformer Transformation = new WrappedTransformer(mockTransformer, transformations);
-
-        Transformation.transform(stream, transformations);
+        wrappedTransformer.transform(stream, transformations);
 
         verify(mockTransformer, times(1)).transform(stream, transformations);
     }
@@ -83,11 +82,9 @@ public class WrappedTransformerTest {
     @Test
     public void testTransformationWithStringAndTransformations() {
 
-        final WrappedTransformer Transformation = new WrappedTransformer(mockTransformer, transformations);
-
         when(mockTransformer.transform(any(InputStream.class), eq(transformations))).then(new VerifyString(TEXT));
 
-        Transformation.transform(TEXT, transformations);
+        wrappedTransformer.transform(TEXT, transformations);
 
         verify(mockTransformer, times(1)).transform(any(InputStream.class), eq(transformations));
     }
@@ -95,17 +92,13 @@ public class WrappedTransformerTest {
     @Test(expected = NullPointerException.class)
     public void testTransformationWithNullStringAndTransformations() {
 
-        final WrappedTransformer Transformation = new WrappedTransformer(mockTransformer, transformations);
-
-        Transformation.transform((String) null, transformations);
+        wrappedTransformer.transform((String) null, transformations);
     }
 
     @Test
     public void testTransformationWithStringAndNullTransformations() {
 
-        final WrappedTransformer Transformation = new WrappedTransformer(mockTransformer, transformations);
-
-        Transformation.transform(TEXT, transformations);
+        wrappedTransformer.transform(TEXT, transformations);
 
         verify(mockTransformer, times(1)).transform(any(InputStream.class), eq(transformations));
     }
@@ -113,9 +106,7 @@ public class WrappedTransformerTest {
     @Test
     public void testTransformationWithTransformationsAndInputStream() {
 
-        final WrappedTransformer Transformation = new WrappedTransformer(mockTransformer, transformations);
-
-        Transformation.transform(stream);
+        wrappedTransformer.transform(stream);
 
         verify(mockTransformer, times(1)).transform(stream, transformations);
     }
@@ -123,9 +114,7 @@ public class WrappedTransformerTest {
     @Test
     public void testTransformationWithTransformationsAndNullInputStream() {
 
-        final WrappedTransformer Transformation = new WrappedTransformer(mockTransformer, transformations);
-
-        Transformation.transform((InputStream) null);
+        wrappedTransformer.transform((InputStream) null);
 
         verify(mockTransformer, times(1)).transform(null, transformations);
     }
@@ -133,11 +122,9 @@ public class WrappedTransformerTest {
     @Test
     public void testTransformationWithTransformationsAndString() {
 
-        final WrappedTransformer Transformation = new WrappedTransformer(mockTransformer, transformations);
-
         when(mockTransformer.transform(any(InputStream.class), eq(transformations))).then(new VerifyString(TEXT));
 
-        Transformation.transform(TEXT);
+        wrappedTransformer.transform(TEXT);
 
         verify(mockTransformer, times(1)).transform(any(InputStream.class), eq(transformations));
     }
@@ -145,9 +132,7 @@ public class WrappedTransformerTest {
     @Test(expected = NullPointerException.class)
     public void testTransformationWithTransformationsAndNullString() {
 
-        final WrappedTransformer Transformation = new WrappedTransformer(mockTransformer, transformations);
-
-        Transformation.transform((String) null);
+        wrappedTransformer.transform((String) null);
     }
 
     /**

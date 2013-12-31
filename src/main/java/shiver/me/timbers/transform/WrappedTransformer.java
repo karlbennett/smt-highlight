@@ -13,12 +13,12 @@ import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
  *
  * @author Karl Bennett
  */
-public class WrappedTransformer implements Transformer {
+public class WrappedTransformer<T extends Transformation> implements Transformer<T> {
 
     private static final Charset UTF_8 = Charset.forName("UTF-8");
 
-    private final Transformer transformer;
-    private final Transformations transformations;
+    private final Transformer<T> transformer;
+    private final Transformations<T> transformations;
 
     /**
      * Create a new {@code WrappedTransformer} that will store a {@code Transformer} implementation and
@@ -27,7 +27,7 @@ public class WrappedTransformer implements Transformer {
      * @param transformer     the transformer to use to apply the transformations.
      * @param transformations the transformations to apply.
      */
-    public WrappedTransformer(Transformer transformer, Transformations transformations) {
+    public WrappedTransformer(Transformer<T> transformer, Transformations<T> transformations) {
 
         assertIsNotNull(argumentIsNullMessage("transformer"), transformer);
         assertIsNotNull(argumentIsNullMessage("transformations"), transformations);
@@ -40,7 +40,7 @@ public class WrappedTransformer implements Transformer {
      * {@inheritDoc}
      */
     @Override
-    public String transform(InputStream stream, Transformations transformations) {
+    public String transform(InputStream stream, Transformations<T> transformations) {
 
         return transformer.transform(stream, transformations);
     }
@@ -52,7 +52,7 @@ public class WrappedTransformer implements Transformer {
      * @param transformations the transformations to apply to the text.
      * @return the transformed text.
      */
-    public String transform(String text, Transformations transformations) {
+    public String transform(String text, Transformations<T> transformations) {
 
         return transform(new ByteArrayInputStream(text.getBytes(UTF_8)), transformations);
     }
