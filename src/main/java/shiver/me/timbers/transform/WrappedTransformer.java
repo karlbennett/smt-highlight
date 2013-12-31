@@ -13,7 +13,7 @@ import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
  *
  * @author Karl Bennett
  */
-public class WrappedTransformer<T extends Transformation> implements Transformer<T> {
+public class WrappedTransformer<T extends Transformation> implements CompositeTransformer<T> {
 
     private static final Charset UTF_8 = Charset.forName("UTF-8");
 
@@ -63,6 +63,7 @@ public class WrappedTransformer<T extends Transformation> implements Transformer
      * @param stream the input stream containing the text to be transformed.
      * @return the transformed text.
      */
+    @Override
     public String transform(InputStream stream) {
 
         return transform(stream, transformations);
