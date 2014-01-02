@@ -16,14 +16,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class WrappedTransformerTest {
+public class WrappedStreamStringTransformerTest {
 
     private static final String TEXT = "this is a test";
 
     private StreamTransformer<Transformation> mockTransformer;
     private Transformations<Transformation> transformations;
-    private InputStream stream;
-    private WrappedStreamTransformer<Transformation> wrappedTransformer;
+    private CompositeStringTransformer<Transformation> stringTransformer;
 
     @Before
     @SuppressWarnings("unchecked")
@@ -31,9 +30,8 @@ public class WrappedTransformerTest {
 
         mockTransformer = mock(StreamTransformer.class);
         transformations = mock(Transformations.class);
-        stream = mock(InputStream.class);
 
-        wrappedTransformer = new WrappedStreamTransformer<Transformation>(mockTransformer, transformations);
+        stringTransformer = new WrappedStreamStringTransformer<Transformation>(mockTransformer, transformations);
     }
 
     @Test
@@ -56,35 +54,11 @@ public class WrappedTransformerTest {
     }
 
     @Test
-    public void testTransformationWithInputStreamAndTransformations() {
-
-        wrappedTransformer.transform(stream, transformations);
-
-        verify(mockTransformer, times(1)).transform(stream, transformations);
-    }
-
-    @Test
-    public void testTransformationWithNullInputStreamAndTransformations() {
-
-        wrappedTransformer.transform((InputStream) null, transformations);
-
-        verify(mockTransformer, times(1)).transform(null, transformations);
-    }
-
-    @Test
-    public void testTransformationWithInputStreamAndNullTransformations() {
-
-        wrappedTransformer.transform(stream, transformations);
-
-        verify(mockTransformer, times(1)).transform(stream, transformations);
-    }
-
-    @Test
     public void testTransformationWithStringAndTransformations() {
 
         when(mockTransformer.transform(any(InputStream.class), eq(transformations))).then(new VerifyString(TEXT));
 
-        wrappedTransformer.transform(TEXT, transformations);
+        stringTransformer.transform(TEXT, transformations);
 
         verify(mockTransformer, times(1)).transform(any(InputStream.class), eq(transformations));
     }
@@ -92,31 +66,15 @@ public class WrappedTransformerTest {
     @Test(expected = NullPointerException.class)
     public void testTransformationWithNullStringAndTransformations() {
 
-        wrappedTransformer.transform((String) null, transformations);
+        stringTransformer.transform(null, transformations);
     }
 
     @Test
     public void testTransformationWithStringAndNullTransformations() {
 
-        wrappedTransformer.transform(TEXT, transformations);
+        stringTransformer.transform(TEXT, transformations);
 
         verify(mockTransformer, times(1)).transform(any(InputStream.class), eq(transformations));
-    }
-
-    @Test
-    public void testTransformationWithTransformationsAndInputStream() {
-
-        wrappedTransformer.transform(stream);
-
-        verify(mockTransformer, times(1)).transform(stream, transformations);
-    }
-
-    @Test
-    public void testTransformationWithTransformationsAndNullInputStream() {
-
-        wrappedTransformer.transform((InputStream) null);
-
-        verify(mockTransformer, times(1)).transform(null, transformations);
     }
 
     @Test
@@ -124,7 +82,7 @@ public class WrappedTransformerTest {
 
         when(mockTransformer.transform(any(InputStream.class), eq(transformations))).then(new VerifyString(TEXT));
 
-        wrappedTransformer.transform(TEXT);
+        stringTransformer.transform(TEXT);
 
         verify(mockTransformer, times(1)).transform(any(InputStream.class), eq(transformations));
     }
@@ -132,7 +90,7 @@ public class WrappedTransformerTest {
     @Test(expected = NullPointerException.class)
     public void testTransformationWithTransformationsAndNullString() {
 
-        wrappedTransformer.transform((String) null);
+        stringTransformer.transform(null);
     }
 
     /**

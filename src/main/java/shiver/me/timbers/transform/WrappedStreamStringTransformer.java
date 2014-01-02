@@ -1,17 +1,20 @@
 package shiver.me.timbers.transform;
 
-import java.io.InputStream;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.Charset;
 
 import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
 import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 
 /**
  * This {@link StreamTransformer} implementation provides some convenience logic for storing {@link Transformations}
- * against a {@link StreamTransformer}.
+ * against a {@link StringTransformer} that can be used as a {@link StreamTransformer}.
  *
  * @author Karl Bennett
  */
-public class WrappedStreamTransformer<T extends Transformation> implements CompositeStreamTransformer<T> {
+public class WrappedStreamStringTransformer<T extends Transformation> implements CompositeStringTransformer<T> {
+
+    private static final Charset UTF_8 = Charset.forName("UTF-8");
 
     private final StreamTransformer<T> transformer;
     private final Transformations<T> transformations;
@@ -23,7 +26,7 @@ public class WrappedStreamTransformer<T extends Transformation> implements Compo
      * @param transformer     the transformer to use to apply the transformations.
      * @param transformations the transformations to apply.
      */
-    public WrappedStreamTransformer(StreamTransformer<T> transformer, Transformations<T> transformations) {
+    public WrappedStreamStringTransformer(StreamTransformer<T> transformer, Transformations<T> transformations) {
 
         assertIsNotNull(argumentIsNullMessage("transformer"), transformer);
         assertIsNotNull(argumentIsNullMessage("transformations"), transformations);
@@ -36,20 +39,17 @@ public class WrappedStreamTransformer<T extends Transformation> implements Compo
      * {@inheritDoc}
      */
     @Override
-    public String transform(InputStream stream, Transformations<T> transformations) {
+    public String transform(String text, Transformations<T> transformations) {
 
-        return transformer.transform(stream, transformations);
+        return transformer.transform(new ByteArrayInputStream(text.getBytes(UTF_8)), transformations);
     }
 
     /**
-     * Read the text from the supplied {@code InputStream} and apply the contained transformations.
-     *
-     * @param stream the input stream containing the text to be transformed.
-     * @return the transformed text.
+     * {@inheritDoc}
      */
     @Override
-    public String transform(InputStream stream) {
+    public String transform(String text) {
 
-        return transform(stream, transformations);
+        return transformer.transform(new ByteArrayInputStream(text.getBytes(UTF_8)), transformations);
     }
 }
