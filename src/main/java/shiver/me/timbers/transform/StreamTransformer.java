@@ -7,7 +7,7 @@ import java.io.InputStream;
  *
  * @author Karl Bennett
  */
-public interface Transformer<T extends Transformation> {
+public interface StreamTransformer<T extends Transformation> {
 
     /**
      * Read the text from the supplied {@code InputStream} and transform using the supplied {@code Transformations}.

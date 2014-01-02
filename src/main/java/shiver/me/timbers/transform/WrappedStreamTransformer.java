@@ -8,26 +8,26 @@ import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
 import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 
 /**
- * This {@link Transformer} implementation provides some convenience logic for storing {@link Transformations} against a
- * {@link Transformer}.
+ * This {@link StreamTransformer} implementation provides some convenience logic for storing {@link Transformations} against a
+ * {@link StreamTransformer}.
  *
  * @author Karl Bennett
  */
-public class WrappedTransformer<T extends Transformation> implements CompositeTransformer<T> {
+public class WrappedStreamTransformer<T extends Transformation> implements CompositeStreamTransformer<T> {
 
     private static final Charset UTF_8 = Charset.forName("UTF-8");
 
-    private final Transformer<T> transformer;
+    private final StreamTransformer<T> transformer;
     private final Transformations<T> transformations;
 
     /**
-     * Create a new {@code WrappedTransformer} that will store a {@code Transformer} implementation and
+     * Create a new {@code WrappedStreamTransformer} that will store a {@code StreamTransformer} implementation and
      * {@code Transformations} so that they can be easily reapplied to different text.
      *
      * @param transformer     the transformer to use to apply the transformations.
      * @param transformations the transformations to apply.
      */
-    public WrappedTransformer(Transformer<T> transformer, Transformations<T> transformations) {
+    public WrappedStreamTransformer(StreamTransformer<T> transformer, Transformations<T> transformations) {
 
         assertIsNotNull(argumentIsNullMessage("transformer"), transformer);
         assertIsNotNull(argumentIsNullMessage("transformations"), transformations);

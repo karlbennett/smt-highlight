@@ -5,7 +5,7 @@ import java.io.InputStream;
 /**
  * This transformer should be implemented with the {@link Transformations} stored internal.
  */
-public interface CompositeTransformer<T extends Transformation> extends Transformer<T> {
+public interface CompositeStreamTransformer<T extends Transformation> extends StreamTransformer<T> {
 
     /**
      * Apply the internally stored {@code Transformations} to the supplied {@code InputStream}.

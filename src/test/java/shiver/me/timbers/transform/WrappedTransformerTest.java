@@ -20,39 +20,39 @@ public class WrappedTransformerTest {
 
     private static final String TEXT = "this is a test";
 
-    private Transformer<Transformation> mockTransformer;
+    private StreamTransformer<Transformation> mockTransformer;
     private Transformations<Transformation> transformations;
     private InputStream stream;
-    private WrappedTransformer<Transformation> wrappedTransformer;
+    private WrappedStreamTransformer<Transformation> wrappedTransformer;
 
     @Before
     @SuppressWarnings("unchecked")
     public void setUp() {
 
-        mockTransformer = mock(Transformer.class);
+        mockTransformer = mock(StreamTransformer.class);
         transformations = mock(Transformations.class);
         stream = mock(InputStream.class);
 
-        wrappedTransformer = new WrappedTransformer<Transformation>(mockTransformer, transformations);
+        wrappedTransformer = new WrappedStreamTransformer<Transformation>(mockTransformer, transformations);
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testCreate() {
 
-        new WrappedTransformer<Transformation>(mock(Transformer.class), transformations);
+        new WrappedStreamTransformer<Transformation>(mock(StreamTransformer.class), transformations);
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithNullTransformation() {
 
-        new WrappedTransformer<Transformation>(null, transformations);
+        new WrappedStreamTransformer<Transformation>(null, transformations);
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithNullTransformations() {
 
-        new WrappedTransformer<Transformation>(mockTransformer, null);
+        new WrappedStreamTransformer<Transformation>(mockTransformer, null);
     }
 
     @Test
