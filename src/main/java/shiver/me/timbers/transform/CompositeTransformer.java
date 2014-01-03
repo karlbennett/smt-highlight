@@ -1,7 +1,7 @@
 package shiver.me.timbers.transform;
 
 /**
- * This transformer should be implemented with the {@link Transformations} stored internal.
+ * This transformer should be implemented with the {@link Transformations} stored internally.
  */
 public interface CompositeTransformer<I, T extends Transformation> extends Transformer<I, T> {
 
