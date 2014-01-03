@@ -24,6 +24,9 @@ public final class TestUtils {
     private TestUtils() {
     }
 
+    public static final Transformations<Transformation> EMPTY_TRANSFORMATIONS =
+            new IndividualTransformations<Transformation>(NULL_TRANSFORMATION);
+
     public static final String ONE = "one";
     public static final String TWO = "two";
     public static final String THREE = "three";

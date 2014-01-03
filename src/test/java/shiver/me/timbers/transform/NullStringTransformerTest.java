@@ -4,10 +4,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static shiver.me.timbers.transform.FileUtils.testFileText;
 
 public class NullStringTransformerTest {
 
-    private static final String TEST_STRING = "test_string";
+    private static final String TEST_STRING = testFileText();
 
     @Test
     public void testTransform() {
