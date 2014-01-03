@@ -11,8 +11,8 @@ import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 import static shiver.me.timbers.checks.Checks.isNotNull;
 
 /**
- * This {@link StreamTransformer} implementation provides some convenience logic for storing {@link Transformations}
- * against a {@link StringTransformer} that can then be used as a {@link StreamTransformer}.
+ * This {@link CompositeStreamTransformer} implementation provides some convenience logic for storing
+ * {@link Transformations} against a {@link StringTransformer} that can then be used as a {@link StreamTransformer}.
  */
 public class WrappedStringStreamTransformer<T extends Transformation> implements CompositeStreamTransformer<T> {
 

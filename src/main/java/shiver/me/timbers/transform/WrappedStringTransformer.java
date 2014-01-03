@@ -4,8 +4,8 @@ import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
 import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 
 /**
- * This {@link StringTransformer} implementation provides some convenience logic for storing {@link Transformations}
- * against a {@link StringTransformer}.
+ * This {@link CompositeStringTransformer} implementation provides some convenience logic for storing
+ * {@link Transformations} against a {@link StringTransformer}.
  */
 public class WrappedStringTransformer<T extends Transformation> implements CompositeStringTransformer<T> {
 

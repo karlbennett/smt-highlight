@@ -7,8 +7,8 @@ import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
 import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 
 /**
- * This {@link StreamTransformer} implementation provides some convenience logic for storing {@link Transformations}
- * against a {@link StreamTransformer} that can be used as a {@link StringTransformer}.
+ * This {@link CompositeStringTransformer} implementation provides some convenience logic for storing
+ * {@link Transformations} against a {@link StreamTransformer} that can be used as a {@link StringTransformer}.
  */
 public class WrappedStreamStringTransformer<T extends Transformation> implements CompositeStringTransformer<T> {
 
