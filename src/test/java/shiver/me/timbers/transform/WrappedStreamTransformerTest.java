@@ -1,5 +1,6 @@
 package shiver.me.timbers.transform;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,6 +9,7 @@ import java.io.InputStream;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class WrappedStreamTransformerTest {
 
@@ -25,6 +27,12 @@ public class WrappedStreamTransformerTest {
         stream = mock(InputStream.class);
 
         streamTransformer = new WrappedStreamTransformer<Transformation>(mockTransformer, transformations);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+
+        verifyNoMoreInteractions(mockTransformer);
     }
 
     @Test
@@ -65,13 +73,13 @@ public class WrappedStreamTransformerTest {
     @Test
     public void testTransformationWithInputStreamAndNullTransformations() {
 
-        streamTransformer.transform(stream, transformations);
+        streamTransformer.transform(stream, null);
 
-        verify(mockTransformer, times(1)).transform(stream, transformations);
+        verify(mockTransformer, times(1)).transform(stream, null);
     }
 
     @Test
-    public void testTransformationWithTransformationsAndInputStream() {
+    public void testTransformationWithInputStream() {
 
         streamTransformer.transform(stream);
 
@@ -79,7 +87,7 @@ public class WrappedStreamTransformerTest {
     }
 
     @Test
-    public void testTransformationWithTransformationsAndNullInputStream() {
+    public void testTransformationWithNullInputStream() {
 
         streamTransformer.transform(null);
 

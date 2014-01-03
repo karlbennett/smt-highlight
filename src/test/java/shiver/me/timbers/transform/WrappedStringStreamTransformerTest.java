@@ -1,5 +1,6 @@
 package shiver.me.timbers.transform;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class WrappedStringStreamTransformerTest {
 
@@ -31,6 +33,12 @@ public class WrappedStringStreamTransformerTest {
         stream = new ByteArrayInputStream(TEXT.getBytes("UTF-8"));
 
         streamTransformer = new WrappedStringStreamTransformer<Transformation>(mockTransformer, transformations);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+
+        verifyNoMoreInteractions(mockTransformer);
     }
 
     @Test
@@ -80,13 +88,13 @@ public class WrappedStringStreamTransformerTest {
     @Test
     public void testTransformationWithInputStreamAndNullTransformations() {
 
-        streamTransformer.transform(stream, transformations);
+        streamTransformer.transform(stream, null);
 
-        verify(mockTransformer, times(1)).transform(TEXT, transformations);
+        verify(mockTransformer, times(1)).transform(TEXT, null);
     }
 
     @Test
-    public void testTransformationWithTransformationsAndInputStream() {
+    public void testTransformationWithString() {
 
         streamTransformer.transform(stream);
 
@@ -94,7 +102,7 @@ public class WrappedStringStreamTransformerTest {
     }
 
     @Test
-    public void testTransformationWithTransformationsAndNullInputStream() {
+    public void testTransformationWithNullString() {
 
         streamTransformer.transform(null);
 

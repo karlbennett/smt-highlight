@@ -1,6 +1,7 @@
 package shiver.me.timbers.transform;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
@@ -11,9 +12,11 @@ import java.io.InputStream;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 public class WrappedStreamStringTransformerTest {
@@ -32,6 +35,12 @@ public class WrappedStreamStringTransformerTest {
         transformations = mock(Transformations.class);
 
         stringTransformer = new WrappedStreamStringTransformer<Transformation>(mockTransformer, transformations);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+
+        verifyNoMoreInteractions(mockTransformer);
     }
 
     @Test
@@ -70,15 +79,16 @@ public class WrappedStreamStringTransformerTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testTransformationWithStringAndNullTransformations() {
 
-        stringTransformer.transform(TEXT, transformations);
+        stringTransformer.transform(TEXT, null);
 
-        verify(mockTransformer, times(1)).transform(any(InputStream.class), eq(transformations));
+        verify(mockTransformer, times(1)).transform(any(InputStream.class), isNull(Transformations.class));
     }
 
     @Test
-    public void testTransformationWithTransformationsAndString() {
+    public void testTransformationWithString() {
 
         when(mockTransformer.transform(any(InputStream.class), eq(transformations))).then(new VerifyString(TEXT));
 
@@ -88,7 +98,7 @@ public class WrappedStreamStringTransformerTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testTransformationWithTransformationsAndNullString() {
+    public void testTransformationWithNullString() {
 
         stringTransformer.transform(null);
     }
