@@ -3,47 +3,53 @@ package shiver.me.timbers.transform;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class WrappedStreamTransformerTest {
+public class WrappedStringStreamTransformerTest {
 
-    private StreamTransformer<Transformation> mockTransformer;
+    private static final String TEXT = "this is a test";
+
+    private StringTransformer<Transformation> mockTransformer;
     private Transformations<Transformation> transformations;
     private InputStream stream;
     private CompositeStreamTransformer<Transformation> streamTransformer;
 
     @Before
     @SuppressWarnings("unchecked")
-    public void setUp() {
+    public void setUp() throws UnsupportedEncodingException {
 
-        mockTransformer = mock(StreamTransformer.class);
+        mockTransformer = mock(StringTransformer.class);
         transformations = mock(Transformations.class);
-        stream = mock(InputStream.class);
+        stream = new ByteArrayInputStream(TEXT.getBytes("UTF-8"));
 
-        streamTransformer = new WrappedStreamTransformer<Transformation>(mockTransformer, transformations);
+        streamTransformer = new WrappedStringStreamTransformer<Transformation>(mockTransformer, transformations);
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testCreate() {
 
-        new WrappedStreamTransformer<Transformation>(mock(StreamTransformer.class), transformations);
+        new WrappedStringStreamTransformer<Transformation>(mock(StringTransformer.class), transformations);
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithNullTransformation() {
 
-        new WrappedStreamTransformer<Transformation>(null, transformations);
+        new WrappedStringStreamTransformer<Transformation>(null, transformations);
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithNullTransformations() {
 
-        new WrappedStreamTransformer<Transformation>(mockTransformer, null);
+        new WrappedStringStreamTransformer<Transformation>(mockTransformer, null);
     }
 
     @Test
@@ -51,7 +57,16 @@ public class WrappedStreamTransformerTest {
 
         streamTransformer.transform(stream, transformations);
 
-        verify(mockTransformer, times(1)).transform(stream, transformations);
+        verify(mockTransformer, times(1)).transform(TEXT, transformations);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testTransformationWithClosedInputStreamAndTransformations() throws IOException {
+
+        final InputStream closedStream = new BufferedInputStream(stream);
+        closedStream.close();
+
+        streamTransformer.transform(closedStream, transformations);
     }
 
     @Test
@@ -67,7 +82,7 @@ public class WrappedStreamTransformerTest {
 
         streamTransformer.transform(stream, transformations);
 
-        verify(mockTransformer, times(1)).transform(stream, transformations);
+        verify(mockTransformer, times(1)).transform(TEXT, transformations);
     }
 
     @Test
@@ -75,7 +90,7 @@ public class WrappedStreamTransformerTest {
 
         streamTransformer.transform(stream);
 
-        verify(mockTransformer, times(1)).transform(stream, transformations);
+        verify(mockTransformer, times(1)).transform(TEXT, transformations);
     }
 
     @Test

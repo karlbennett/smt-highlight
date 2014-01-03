@@ -18,8 +18,8 @@ public class WrappedStreamStringTransformer<T extends Transformation> implements
     private final Transformations<T> transformations;
 
     /**
-     * Create a new {@code WrappedStreamTransformer} that will store a {@code StreamTransformer} implementation and
-     * {@code Transformations} so that they can be easily reapplied to different text.
+     * Create a new {@code WrappedStreamStringTransformer} that will store a {@code StreamTransformer} implementation
+     * and {@code Transformations} so that they can be easily reapplied to different text.
      *
      * @param transformer     the transformer to use to apply the transformations.
      * @param transformations the transformations to apply.
@@ -48,6 +48,6 @@ public class WrappedStreamStringTransformer<T extends Transformation> implements
     @Override
     public String transform(String text) {
 
-        return transformer.transform(new ByteArrayInputStream(text.getBytes(UTF_8)), transformations);
+        return transform(text, transformations);
     }
 }

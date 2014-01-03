@@ -38,19 +38,19 @@ public class WrappedStreamStringTransformerTest {
     @SuppressWarnings("unchecked")
     public void testCreate() {
 
-        new WrappedStreamTransformer<Transformation>(mock(StreamTransformer.class), transformations);
+        new WrappedStreamStringTransformer<Transformation>(mock(StreamTransformer.class), transformations);
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithNullTransformation() {
 
-        new WrappedStreamTransformer<Transformation>(null, transformations);
+        new WrappedStreamStringTransformer<Transformation>(null, transformations);
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithNullTransformations() {
 
-        new WrappedStreamTransformer<Transformation>(mockTransformer, null);
+        new WrappedStreamStringTransformer<Transformation>(mockTransformer, null);
     }
 
     @Test
