@@ -1,15 +1,11 @@
 package shiver.me.timbers.transform;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.io.InputStream;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
@@ -18,13 +14,16 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static shiver.me.timbers.transform.FileUtils.testFileInputStream;
+import static shiver.me.timbers.transform.FileUtils.testFileText;
 
 public class WrappedStreamStringTransformerTest {
 
-    private static final String TEXT = "this is a test";
-
     private StreamTransformer<Transformation> mockTransformer;
     private Transformations<Transformation> transformations;
+    private InputStream stream;
+    private String string;
+
     private CompositeStringTransformer<Transformation> stringTransformer;
 
     @Before
@@ -33,6 +32,8 @@ public class WrappedStreamStringTransformerTest {
 
         mockTransformer = mock(StreamTransformer.class);
         transformations = mock(Transformations.class);
+        stream = testFileInputStream();
+        string = testFileText();
 
         stringTransformer = new WrappedStreamStringTransformer<Transformation>(mockTransformer, transformations);
     }
@@ -65,24 +66,26 @@ public class WrappedStreamStringTransformerTest {
     @Test
     public void testTransformationWithStringAndTransformations() {
 
-        when(mockTransformer.transform(any(InputStream.class), eq(transformations))).then(new VerifyString(TEXT));
+        when(mockTransformer.transform(any(InputStream.class), eq(transformations))).then(new VerifyStream(stream));
 
-        stringTransformer.transform(TEXT, transformations);
+        stringTransformer.transform(string, transformations);
 
         verify(mockTransformer, times(1)).transform(any(InputStream.class), eq(transformations));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testTransformationWithNullStringAndTransformations() {
 
         stringTransformer.transform(null, transformations);
+
+        verify(mockTransformer, times(1)).transform(null, transformations);
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testTransformationWithStringAndNullTransformations() {
 
-        stringTransformer.transform(TEXT, null);
+        stringTransformer.transform(string, null);
 
         verify(mockTransformer, times(1)).transform(any(InputStream.class), isNull(Transformations.class));
     }
@@ -90,43 +93,18 @@ public class WrappedStreamStringTransformerTest {
     @Test
     public void testTransformationWithString() {
 
-        when(mockTransformer.transform(any(InputStream.class), eq(transformations))).then(new VerifyString(TEXT));
+        when(mockTransformer.transform(any(InputStream.class), eq(transformations))).then(new VerifyStream(stream));
 
-        stringTransformer.transform(TEXT);
+        stringTransformer.transform(string);
 
         verify(mockTransformer, times(1)).transform(any(InputStream.class), eq(transformations));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testTransformationWithNullString() {
 
         stringTransformer.transform(null);
-    }
 
-    /**
-     * Verify that the string in the supplied {@code InputStream is correct.}
-     */
-    private static class VerifyString implements Answer<Void> {
-
-        private final String text;
-
-        /**
-         * Create a new {@code VerifyString} with the expected text.
-         *
-         * @param text the text that is expected to be passed into the mock method as an {@code InputStream}.
-         */
-        private VerifyString(String text) {
-
-            this.text = text;
-        }
-
-        @Override
-        public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-
-            assertEquals("the converted text should be correct.", text,
-                    IOUtils.toString((InputStream) invocationOnMock.getArguments()[0]));
-
-            return null;
-        }
+        verify(mockTransformer, times(1)).transform(null, transformations);
     }
 }

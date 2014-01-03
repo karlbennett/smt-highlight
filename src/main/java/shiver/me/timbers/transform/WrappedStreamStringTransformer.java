@@ -5,6 +5,7 @@ import java.nio.charset.Charset;
 
 import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
 import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
+import static shiver.me.timbers.checks.Checks.isNotNull;
 
 /**
  * This {@link CompositeStringTransformer} implementation provides some convenience logic for storing
@@ -39,7 +40,8 @@ public class WrappedStreamStringTransformer<T extends Transformation> implements
     @Override
     public String transform(String text, Transformations<T> transformations) {
 
-        return transformer.transform(new ByteArrayInputStream(text.getBytes(UTF_8)), transformations);
+        return transformer.transform(isNotNull(text) ? new ByteArrayInputStream(text.getBytes(UTF_8)) : null,
+                transformations);
     }
 
     /**

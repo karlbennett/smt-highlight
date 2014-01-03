@@ -8,13 +8,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static shiver.me.timbers.transform.FileUtils.testFileText;
 
 public class WrappedStringTransformerTest {
 
-    private static final String TEXT = "this is a test";
-
     private StringTransformer<Transformation> mockTransformer;
     private Transformations<Transformation> transformations;
+    private String string;
+
     private CompositeStringTransformer<Transformation> stringTransformer;
 
     @Before
@@ -23,6 +24,7 @@ public class WrappedStringTransformerTest {
 
         mockTransformer = mock(StringTransformer.class);
         transformations = mock(Transformations.class);
+        string = testFileText();
 
         stringTransformer = new WrappedStringTransformer<Transformation>(mockTransformer, transformations);
     }
@@ -55,9 +57,9 @@ public class WrappedStringTransformerTest {
     @Test
     public void testTransformationWithStringAndTransformations() {
 
-        stringTransformer.transform(TEXT, transformations);
+        stringTransformer.transform(string, transformations);
 
-        verify(mockTransformer, times(1)).transform(TEXT, transformations);
+        verify(mockTransformer, times(1)).transform(string, transformations);
     }
 
     @Test
@@ -71,17 +73,17 @@ public class WrappedStringTransformerTest {
     @Test
     public void testTransformationWithStringAndNullTransformations() {
 
-        stringTransformer.transform(TEXT, null);
+        stringTransformer.transform(string, null);
 
-        verify(mockTransformer, times(1)).transform(TEXT, null);
+        verify(mockTransformer, times(1)).transform(string, null);
     }
 
     @Test
     public void testTransformationWithString() {
 
-        stringTransformer.transform(TEXT);
+        stringTransformer.transform(string);
 
-        verify(mockTransformer, times(1)).transform(TEXT, transformations);
+        verify(mockTransformer, times(1)).transform(string, transformations);
     }
 
     @Test

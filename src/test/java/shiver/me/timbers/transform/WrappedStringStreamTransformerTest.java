@@ -4,8 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -14,14 +12,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static shiver.me.timbers.transform.FileUtils.testFileInputStream;
+import static shiver.me.timbers.transform.FileUtils.testFileText;
 
 public class WrappedStringStreamTransformerTest {
-
-    private static final String TEXT = "this is a test";
 
     private StringTransformer<Transformation> mockTransformer;
     private Transformations<Transformation> transformations;
     private InputStream stream;
+    private String string;
+
     private CompositeStreamTransformer<Transformation> streamTransformer;
 
     @Before
@@ -30,7 +30,8 @@ public class WrappedStringStreamTransformerTest {
 
         mockTransformer = mock(StringTransformer.class);
         transformations = mock(Transformations.class);
-        stream = new ByteArrayInputStream(TEXT.getBytes("UTF-8"));
+        stream = testFileInputStream();
+        string = testFileText();
 
         streamTransformer = new WrappedStringStreamTransformer<Transformation>(mockTransformer, transformations);
     }
@@ -65,16 +66,15 @@ public class WrappedStringStreamTransformerTest {
 
         streamTransformer.transform(stream, transformations);
 
-        verify(mockTransformer, times(1)).transform(TEXT, transformations);
+        verify(mockTransformer, times(1)).transform(string, transformations);
     }
 
     @Test(expected = RuntimeException.class)
     public void testTransformationWithClosedInputStreamAndTransformations() throws IOException {
 
-        final InputStream closedStream = new BufferedInputStream(stream);
-        closedStream.close();
+        stream.close();
 
-        streamTransformer.transform(closedStream, transformations);
+        streamTransformer.transform(stream, transformations);
     }
 
     @Test
@@ -90,15 +90,23 @@ public class WrappedStringStreamTransformerTest {
 
         streamTransformer.transform(stream, null);
 
-        verify(mockTransformer, times(1)).transform(TEXT, null);
+        verify(mockTransformer, times(1)).transform(string, null);
     }
 
     @Test
-    public void testTransformationWithString() {
+    public void testTransformationWithInputStream() {
 
         streamTransformer.transform(stream);
 
-        verify(mockTransformer, times(1)).transform(TEXT, transformations);
+        verify(mockTransformer, times(1)).transform(string, transformations);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testTransformationWithClosedInputStream() throws IOException {
+
+        stream.close();
+
+        streamTransformer.transform(stream);
     }
 
     @Test

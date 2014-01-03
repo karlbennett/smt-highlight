@@ -16,6 +16,7 @@ public class WrappedFileTransformerTest {
     private FileTransformer<Transformation> mockTransformer;
     private Transformations<Transformation> transformations;
     private File file;
+
     private CompositeFileTransformer<Transformation> fileTransformer;
 
     @Before

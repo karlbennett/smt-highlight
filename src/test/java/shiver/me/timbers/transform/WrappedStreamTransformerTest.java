@@ -4,18 +4,21 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static shiver.me.timbers.transform.FileUtils.testFileInputStream;
 
 public class WrappedStreamTransformerTest {
 
     private StreamTransformer<Transformation> mockTransformer;
     private Transformations<Transformation> transformations;
     private InputStream stream;
+
     private CompositeStreamTransformer<Transformation> streamTransformer;
 
     @Before
@@ -24,7 +27,7 @@ public class WrappedStreamTransformerTest {
 
         mockTransformer = mock(StreamTransformer.class);
         transformations = mock(Transformations.class);
-        stream = mock(InputStream.class);
+        stream = testFileInputStream();
 
         streamTransformer = new WrappedStreamTransformer<Transformation>(mockTransformer, transformations);
     }
@@ -62,6 +65,14 @@ public class WrappedStreamTransformerTest {
         verify(mockTransformer, times(1)).transform(stream, transformations);
     }
 
+    @Test(expected = RuntimeException.class)
+    public void testTransformationWithClosedInputStreamAndTransformations() throws IOException {
+
+        stream.close();
+
+        streamTransformer.transform(stream, transformations);
+    }
+
     @Test
     public void testTransformationWithNullInputStreamAndTransformations() {
 
@@ -84,6 +95,14 @@ public class WrappedStreamTransformerTest {
         streamTransformer.transform(stream);
 
         verify(mockTransformer, times(1)).transform(stream, transformations);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testTransformationWithClosedInputStream() throws IOException {
+
+        stream.close();
+
+        streamTransformer.transform(stream);
     }
 
     @Test
