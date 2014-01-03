@@ -36,28 +36,28 @@ public class NullCompositeFileTransformerTest {
     }
 
     @Test
-    public void testTransformWithStreamAndNullTransformations() {
+    public void testTransformWithFileAndNullTransformations() {
 
         assertEquals("the input string should be returned.", TEST_STRING,
                 new NullCompositeFileTransformer<Transformation>(EMPTY_TRANSFORMATIONS).transform(file, null));
     }
 
     @Test
-    public void testTransformWithNullStreamAndTransformations() {
+    public void testTransformWithNullFileAndTransformations() {
 
         assertNull("null should be returned.",
                 new NullCompositeFileTransformer<Transformation>(EMPTY_TRANSFORMATIONS).transform(null, null));
     }
 
     @Test
-    public void testTransformWithStream() {
+    public void testTransformWithFile() {
 
         assertEquals("the input string should be returned.", TEST_STRING,
                 new NullCompositeFileTransformer<Transformation>(EMPTY_TRANSFORMATIONS).transform(file));
     }
 
     @Test
-    public void testTransformWithNullStream() {
+    public void testTransformWithNullFile() {
 
         assertNull("null should be returned.",
                 new NullCompositeFileTransformer<Transformation>(EMPTY_TRANSFORMATIONS).transform(null));
