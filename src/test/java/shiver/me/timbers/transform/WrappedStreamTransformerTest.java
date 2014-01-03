@@ -65,12 +65,14 @@ public class WrappedStreamTransformerTest {
         verify(mockTransformer, times(1)).transform(stream, transformations);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testTransformationWithClosedInputStreamAndTransformations() throws IOException {
 
         stream.close();
 
         streamTransformer.transform(stream, transformations);
+
+        verify(mockTransformer, times(1)).transform(stream, transformations);
     }
 
     @Test
@@ -97,12 +99,14 @@ public class WrappedStreamTransformerTest {
         verify(mockTransformer, times(1)).transform(stream, transformations);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testTransformationWithClosedInputStream() throws IOException {
 
         stream.close();
 
         streamTransformer.transform(stream);
+
+        verify(mockTransformer, times(1)).transform(stream, transformations);
     }
 
     @Test
