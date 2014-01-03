@@ -11,30 +11,20 @@ import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 import static shiver.me.timbers.checks.Checks.isNotNull;
 
 /**
- * This {@link CompositeStreamTransformer} implementation provides some convenience logic for storing
- * {@link Transformations} against a {@link StringTransformer} that can then be used as a {@link StreamTransformer}.
+ * This {@link StreamTransformer} implementation provides some convenience logic for presenting a
+ * {@link StringTransformer} as a {@link StreamTransformer}.
  */
-public class WrappedStringStreamTransformer<T extends Transformation> implements CompositeStreamTransformer<T> {
+public class StringStreamTransformer<T extends Transformation> implements StreamTransformer<T> {
 
     private static final int STREAM_COPY_BUFFER_SIZE = 1024 * 4; // This value was taken from commons-io.
 
     private final StringTransformer<T> transformer;
-    private final Transformations<T> transformations;
 
-    /**
-     * Create a new {@code WrappedStreamTransformer} that will store a {@code StreamTransformer} implementation and
-     * {@code Transformations} so that they can be easily reapplied to different text.
-     *
-     * @param transformer     the transformer to use to apply the transformations.
-     * @param transformations the transformations to apply.
-     */
-    public WrappedStringStreamTransformer(StringTransformer<T> transformer, Transformations<T> transformations) {
+    public StringStreamTransformer(StringTransformer<T> transformer) {
 
         assertIsNotNull(argumentIsNullMessage("transformer"), transformer);
-        assertIsNotNull(argumentIsNullMessage("transformations"), transformations);
 
         this.transformer = transformer;
-        this.transformations = transformations;
     }
 
     /**
@@ -44,15 +34,6 @@ public class WrappedStringStreamTransformer<T extends Transformation> implements
     public String transform(InputStream stream, Transformations<T> transformations) {
 
         return transformer.transform(isNotNull(stream) ? toString(stream) : null, transformations);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String transform(InputStream stream) {
-
-        return transform(stream, transformations);
     }
 
     private static String toString(InputStream stream) {

@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.InputStream;
 
 import static org.mockito.Matchers.any;
@@ -15,17 +14,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static shiver.me.timbers.transform.FileUtils.testFile;
 import static shiver.me.timbers.transform.FileUtils.testFileInputStream;
+import static shiver.me.timbers.transform.FileUtils.testFileText;
 
-public class WrappedStreamFileTransformerTest {
+public class StreamStringTransformerTest {
 
     private StreamTransformer<Transformation> mockTransformer;
     private Transformations<Transformation> transformations;
-    private File file;
     private InputStream stream;
+    private String string;
 
-    private CompositeFileTransformer<Transformation> stringTransformer;
+    private StringTransformer<Transformation> stringTransformer;
 
     @Before
     @SuppressWarnings("unchecked")
@@ -33,10 +32,10 @@ public class WrappedStreamFileTransformerTest {
 
         mockTransformer = mock(StreamTransformer.class);
         transformations = mock(Transformations.class);
-        file = testFile();
         stream = testFileInputStream();
+        string = testFileText();
 
-        stringTransformer = new WrappedStreamFileTransformer<Transformation>(mockTransformer, transformations);
+        stringTransformer = new StreamStringTransformer<Transformation>(mockTransformer);
     }
 
     @After
@@ -49,19 +48,13 @@ public class WrappedStreamFileTransformerTest {
     @SuppressWarnings("unchecked")
     public void testCreate() {
 
-        new WrappedStreamFileTransformer<Transformation>(mock(StreamTransformer.class), transformations);
+        new StreamStringTransformer<Transformation>(mock(StreamTransformer.class));
     }
 
     @Test(expected = AssertionError.class)
-    public void testCreateWithNullTransformation() {
+    public void testCreateWithNullTransformer() {
 
-        new WrappedStreamFileTransformer<Transformation>(null, transformations);
-    }
-
-    @Test(expected = AssertionError.class)
-    public void testCreateWithNullTransformations() {
-
-        new WrappedStreamFileTransformer<Transformation>(mockTransformer, null);
+        new StreamStringTransformer<Transformation>(null);
     }
 
     @Test
@@ -69,7 +62,7 @@ public class WrappedStreamFileTransformerTest {
 
         when(mockTransformer.transform(any(InputStream.class), eq(transformations))).then(new VerifyStream(stream));
 
-        stringTransformer.transform(file, transformations);
+        stringTransformer.transform(string, transformations);
 
         verify(mockTransformer, times(1)).transform(any(InputStream.class), eq(transformations));
     }
@@ -86,26 +79,8 @@ public class WrappedStreamFileTransformerTest {
     @SuppressWarnings("unchecked")
     public void testTransformationWithStringAndNullTransformations() {
 
-        stringTransformer.transform(file, null);
+        stringTransformer.transform(string, null);
 
         verify(mockTransformer, times(1)).transform(any(InputStream.class), isNull(Transformations.class));
-    }
-
-    @Test
-    public void testTransformationWithString() {
-
-        when(mockTransformer.transform(any(InputStream.class), eq(transformations))).then(new VerifyStream(stream));
-
-        stringTransformer.transform(file);
-
-        verify(mockTransformer, times(1)).transform(any(InputStream.class), eq(transformations));
-    }
-
-    @Test
-    public void testTransformationWithNullString() {
-
-        stringTransformer.transform(null);
-
-        verify(mockTransformer, times(1)).transform(null, transformations);
     }
 }

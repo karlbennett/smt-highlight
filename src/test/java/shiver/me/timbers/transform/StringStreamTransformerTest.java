@@ -15,14 +15,14 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static shiver.me.timbers.transform.FileUtils.testFileInputStream;
 import static shiver.me.timbers.transform.FileUtils.testFileText;
 
-public class WrappedStringStreamTransformerTest {
+public class StringStreamTransformerTest {
 
     private StringTransformer<Transformation> mockTransformer;
     private Transformations<Transformation> transformations;
     private InputStream stream;
     private String string;
 
-    private CompositeStreamTransformer<Transformation> streamTransformer;
+    private StreamTransformer<Transformation> streamTransformer;
 
     @Before
     @SuppressWarnings("unchecked")
@@ -33,7 +33,7 @@ public class WrappedStringStreamTransformerTest {
         stream = testFileInputStream();
         string = testFileText();
 
-        streamTransformer = new WrappedStringStreamTransformer<Transformation>(mockTransformer, transformations);
+        streamTransformer = new StringStreamTransformer<Transformation>(mockTransformer);
     }
 
     @After
@@ -46,19 +46,13 @@ public class WrappedStringStreamTransformerTest {
     @SuppressWarnings("unchecked")
     public void testCreate() {
 
-        new WrappedStringStreamTransformer<Transformation>(mock(StringTransformer.class), transformations);
+        new StringStreamTransformer<Transformation>(mock(StringTransformer.class));
     }
 
     @Test(expected = AssertionError.class)
-    public void testCreateWithNullTransformation() {
+    public void testCreateWithNullTransformer() {
 
-        new WrappedStringStreamTransformer<Transformation>(null, transformations);
-    }
-
-    @Test(expected = AssertionError.class)
-    public void testCreateWithNullTransformations() {
-
-        new WrappedStringStreamTransformer<Transformation>(mockTransformer, null);
+        new StringStreamTransformer<Transformation>(null);
     }
 
     @Test
@@ -91,29 +85,5 @@ public class WrappedStringStreamTransformerTest {
         streamTransformer.transform(stream, null);
 
         verify(mockTransformer, times(1)).transform(string, null);
-    }
-
-    @Test
-    public void testTransformationWithInputStream() {
-
-        streamTransformer.transform(stream);
-
-        verify(mockTransformer, times(1)).transform(string, transformations);
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testTransformationWithClosedInputStream() throws IOException {
-
-        stream.close();
-
-        streamTransformer.transform(stream);
-    }
-
-    @Test
-    public void testTransformationWithNullString() {
-
-        streamTransformer.transform(null);
-
-        verify(mockTransformer, times(1)).transform(null, transformations);
     }
 }
