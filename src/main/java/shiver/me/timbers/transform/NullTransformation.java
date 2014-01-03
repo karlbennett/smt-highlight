@@ -15,7 +15,7 @@ public class NullTransformation implements Transformation {
     @Override
     public String getName() {
 
-        return NullTransformation.class.getSimpleName();
+        return getClass().getSimpleName();
     }
 
     @Override
