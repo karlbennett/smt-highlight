@@ -42,10 +42,7 @@ public class WrappedStreamTransformer<T extends Transformation> implements Compo
     }
 
     /**
-     * Read the text from the supplied {@code InputStream} and apply the contained transformations.
-     *
-     * @param stream the input stream containing the text to be transformed.
-     * @return the transformed text.
+     * {@inheritDoc}
      */
     @Override
     public String transform(InputStream stream) {
