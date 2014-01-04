@@ -15,9 +15,7 @@ import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 import static shiver.me.timbers.checks.Checks.isNotNull;
 
 /**
- * A collection of individual and possibly unrelated transformations.
- *
- * @author Karl Bennett
+ * A container of individual and possibly unrelated transformations.
  */
 public class IndividualTransformations<T extends Transformation> implements Transformations<T> {
 
