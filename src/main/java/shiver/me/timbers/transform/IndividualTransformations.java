@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Collections.singleton;
 import static shiver.me.timbers.asserts.Asserts.argumentIsNullMessage;
 import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
 import static shiver.me.timbers.checks.Checks.isNotNull;
@@ -30,32 +29,19 @@ public class IndividualTransformations<T extends Transformation> implements Tran
 
     public IndividualTransformations(Iterable<T> transformations, T nullTransformation) {
 
-        this(notNullSingleton(transformations), nullTransformation);
-    }
-
-    public IndividualTransformations(Collection<Iterable<T>> multipleTransformations,
-                                     T nullTransformation) {
-
-        assertIsNotNull(argumentIsNullMessage("multipleTransformations"), multipleTransformations);
+        assertIsNotNull(argumentIsNullMessage("transformations"), transformations);
         assertIsNotNull(argumentIsNullMessage("nullTransformation"), nullTransformation);
 
         this.transformationList = new ArrayList<T>();
         this.transformationMap = new HashMap<String, T>();
 
-        for (T transformation : new CompactedIterable<T>(multipleTransformations)) {
+        for (T transformation : transformations) {
 
             this.transformationList.add(transformation);
             this.transformationMap.put(transformation.getName(), transformation);
         }
 
         this.nullTransformation = nullTransformation;
-    }
-
-    private static <T> Collection<Iterable<T>> notNullSingleton(Iterable<T> transformations) {
-
-        assertIsNotNull(argumentIsNullMessage("transformations"), transformations);
-
-        return singleton(transformations);
     }
 
     /**
@@ -92,5 +78,11 @@ public class IndividualTransformations<T extends Transformation> implements Tran
     public Iterator<T> iterator() {
         // We create a copy of the list so that it can't be mutated with the returned iterator.
         return new LinkedList<T>(transformationList).iterator();
+    }
+
+    @Override
+    public Collection<T> asCollection() {
+
+        return new ArrayList<T>(transformationList);
     }
 }

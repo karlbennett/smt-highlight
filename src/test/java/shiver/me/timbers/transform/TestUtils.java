@@ -134,4 +134,17 @@ public final class TestUtils {
         assertEquals("the null Transformation should be returned for the name " + name, NULL_TRANSFORMATION,
                 transformations.get(name));
     }
+
+    public static void assertCollection(List<Transformation> transformationList,
+                                        Collection<Transformation> transformations) {
+
+        int i = 0;
+        for (Transformation transformation : transformations) {
+
+            assertEquals("Transformation " + NAMES.get(i) + " should be correct at index " + i,
+                    transformationList.get(i), transformation);
+
+            i++;
+        }
+    }
 }

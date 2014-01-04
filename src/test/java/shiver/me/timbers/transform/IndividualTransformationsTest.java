@@ -2,14 +2,12 @@ package shiver.me.timbers.transform;
 
 import org.junit.Test;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
 import static shiver.me.timbers.transform.NullTransformation.NULL_TRANSFORMATION;
+import static shiver.me.timbers.transform.TestUtils.assertCollection;
 import static shiver.me.timbers.transform.TestUtils.assertNoIterations;
 import static shiver.me.timbers.transform.TestUtils.assertNullTransformation;
 import static shiver.me.timbers.transform.TestUtils.assertTransformationsIndices;
@@ -41,35 +39,13 @@ public class IndividualTransformationsTest {
     @Test(expected = AssertionError.class)
     public void testCreateWithNullIterable() {
 
-        new IndividualTransformations<Transformation>((Iterable<Transformation>) null, NULL_TRANSFORMATION);
+        new IndividualTransformations<Transformation>(null, NULL_TRANSFORMATION);
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithIterableAndNullNullTransformer() {
 
         new IndividualTransformations<Transformation>(mockIterable(mockTransformationList()), null);
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void testCreateWithCollection() {
-
-        new IndividualTransformations<Transformation>((Collection<Iterable<Transformation>>) mock(Collection.class),
-                NULL_TRANSFORMATION);
-    }
-
-    @Test(expected = AssertionError.class)
-    public void testCreateWithNullCollection() {
-
-        new IndividualTransformations<Transformation>((Collection<Iterable<Transformation>>) null, NULL_TRANSFORMATION);
-    }
-
-    @Test(expected = AssertionError.class)
-    @SuppressWarnings("unchecked")
-    public void testCreateWithCollectionAndNullNullTransformer() {
-
-        new IndividualTransformations<Transformation>((Collection<Iterable<Transformation>>) mock(Collection.class),
-                null);
     }
 
     @Test
@@ -130,32 +106,6 @@ public class IndividualTransformationsTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testGetWithIndexWithMultipleIterables() {
-
-        final List<Transformation> transformationList = mockTransformationList();
-
-        final Iterable<Transformation> iterableOne = TestUtils.mockIterable(transformationList.subList(0, 5));
-        final Iterable<Transformation> iterableTwo = TestUtils.mockIterable(transformationList.subList(5, 10));
-
-        assertTransformationsIndices(transformationList,
-                new IndividualTransformations<Transformation>(asList(iterableOne, iterableTwo), NULL_TRANSFORMATION));
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void testGetWithNameWithMultipleIterables() {
-
-        final List<Transformation> transformationList = mockTransformationList();
-
-        final Iterable<Transformation> iterableOne = TestUtils.mockIterable(transformationList.subList(0, 5));
-        final Iterable<Transformation> iterableTwo = TestUtils.mockIterable(transformationList.subList(5, 10));
-
-        assertTransformationsNames(transformationList,
-                new IndividualTransformations<Transformation>(asList(iterableOne, iterableTwo), NULL_TRANSFORMATION));
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
     public void testIteratorIsNotNull() {
 
         final List<Transformation> transformationList = mockTransformationList();
@@ -163,5 +113,16 @@ public class IndividualTransformationsTest {
         assertNotNull("an iterator should be returned",
                 new IndividualTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION)
                         .iterator());
+    }
+
+    @Test
+    public void testAsCollection() {
+
+        final List<Transformation> transformationList = mockTransformationList();
+
+        final Iterable<Transformation> iterable = mockIterable(transformationList);
+
+        assertCollection(transformationList,
+                new IndividualTransformations<Transformation>(iterable, NULL_TRANSFORMATION).asCollection());
     }
 }
