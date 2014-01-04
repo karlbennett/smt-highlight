@@ -8,6 +8,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 import static shiver.me.timbers.transform.NullTransformation.NULL_TRANSFORMATION;
 import static shiver.me.timbers.transform.TestUtils.assertNoIterations;
 import static shiver.me.timbers.transform.TestUtils.assertNullTransformation;
@@ -16,19 +17,15 @@ import static shiver.me.timbers.transform.TestUtils.assertTransformationsNames;
 import static shiver.me.timbers.transform.TestUtils.mockIterable;
 import static shiver.me.timbers.transform.TestUtils.mockTransformationList;
 
-public class IndividualTransformationsTest implements TransformationsTestTemplate {
+public class IndividualTransformationsTest {
 
     @Test
-    @Override
     public void testCreate() {
 
-        final List<Transformation> transformationList = mockTransformationList();
-
-        new IndividualTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION);
+        new IndividualTransformations<Transformation>(mockIterable(mockTransformationList()), NULL_TRANSFORMATION);
     }
 
     @Test
-    @Override
     public void testCreateWithEmptyIterable() {
 
         assertNoIterations(
@@ -36,26 +33,46 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     }
 
     @Test
-    public void testCreateWithDefaultConstructor() {
+    public void testCreateWithNullTransformer() {
 
         assertNoIterations(new IndividualTransformations<Transformation>(NULL_TRANSFORMATION));
     }
 
     @Test(expected = AssertionError.class)
-    @Override
     public void testCreateWithNullIterable() {
 
         new IndividualTransformations<Transformation>((Iterable<Transformation>) null, NULL_TRANSFORMATION);
     }
 
     @Test(expected = AssertionError.class)
-    public void testCreateWithNullIterableCollection() {
+    public void testCreateWithIterableAndNullNullTransformer() {
+
+        new IndividualTransformations<Transformation>(mockIterable(mockTransformationList()), null);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testCreateWithCollection() {
+
+        new IndividualTransformations<Transformation>((Collection<Iterable<Transformation>>) mock(Collection.class),
+                NULL_TRANSFORMATION);
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testCreateWithNullCollection() {
 
         new IndividualTransformations<Transformation>((Collection<Iterable<Transformation>>) null, NULL_TRANSFORMATION);
     }
 
+    @Test(expected = AssertionError.class)
+    @SuppressWarnings("unchecked")
+    public void testCreateWithCollectionAndNullNullTransformer() {
+
+        new IndividualTransformations<Transformation>((Collection<Iterable<Transformation>>) mock(Collection.class),
+                null);
+    }
+
     @Test
-    @Override
     public void testGetWithIndex() {
 
         final List<Transformation> transformationList = mockTransformationList();
@@ -67,7 +84,6 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     }
 
     @Test
-    @Override
     public void testGetWithName() {
 
         final List<Transformation> transformationList = mockTransformationList();
@@ -79,7 +95,6 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     }
 
     @Test
-    @Override
     public void testGetWithInvalidIndex() {
 
         final List<Transformation> transformationList = mockTransformationList();
@@ -92,7 +107,6 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     }
 
     @Test
-    @Override
     public void testGetWithInvalidName() {
 
         final List<Transformation> transformationList = mockTransformationList();
@@ -104,7 +118,6 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     }
 
     @Test
-    @Override
     public void testGetWithNullName() {
 
         final List<Transformation> transformationList = mockTransformationList();
@@ -142,7 +155,6 @@ public class IndividualTransformationsTest implements TransformationsTestTemplat
     }
 
     @Test
-    @Override
     @SuppressWarnings("unchecked")
     public void testIteratorIsNotNull() {
 

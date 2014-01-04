@@ -75,10 +75,10 @@ public final class TestUtils {
 
     public static List<Transformation> mockTransformationList() {
 
-        return mockTransformations(NAMES);
+        return mockTransformationList(NAMES);
     }
 
-    public static List<Transformation> mockTransformations(Collection<String> names) {
+    public static List<Transformation> mockTransformationList(Collection<String> names) {
 
         final List<Transformation> transformations = new ArrayList<Transformation>(names.size());
 

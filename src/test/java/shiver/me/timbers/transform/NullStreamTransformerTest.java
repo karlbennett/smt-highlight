@@ -4,7 +4,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static shiver.me.timbers.transform.FileUtils.*;
+import static shiver.me.timbers.transform.FileUtils.testFileInputStream;
+import static shiver.me.timbers.transform.FileUtils.testFileText;
 
 public class NullStreamTransformerTest {
 
