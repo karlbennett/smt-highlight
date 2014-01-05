@@ -25,7 +25,7 @@ public final class TestUtils {
     }
 
     public static final Transformations<Transformation> EMPTY_TRANSFORMATIONS =
-            new IndividualTransformations<Transformation>(NULL_TRANSFORMATION);
+            new IterableTransformations<Transformation>(NULL_TRANSFORMATION);
 
     public static final String ONE = "one";
     public static final String TWO = "two";

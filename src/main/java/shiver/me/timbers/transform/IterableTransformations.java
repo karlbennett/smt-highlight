@@ -16,18 +16,18 @@ import static shiver.me.timbers.checks.Checks.isNotNull;
 /**
  * A container of individual and possibly unrelated transformations.
  */
-public class IndividualTransformations<T extends Transformation> implements Transformations<T> {
+public class IterableTransformations<T extends Transformation> implements Transformations<T> {
 
     private final List<T> transformationList;
     private final Map<String, T> transformationMap;
     private final T nullTransformation;
 
-    public IndividualTransformations(T nullTransformation) {
+    public IterableTransformations(T nullTransformation) {
 
         this(Collections.<T>emptySet(), nullTransformation);
     }
 
-    public IndividualTransformations(Iterable<T> transformations, T nullTransformation) {
+    public IterableTransformations(Iterable<T> transformations, T nullTransformation) {
 
         assertIsNotNull(argumentIsNullMessage("transformations"), transformations);
         assertIsNotNull(argumentIsNullMessage("nullTransformation"), nullTransformation);

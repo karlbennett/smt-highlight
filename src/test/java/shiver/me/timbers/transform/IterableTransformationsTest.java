@@ -15,37 +15,37 @@ import static shiver.me.timbers.transform.TestUtils.assertTransformationsNames;
 import static shiver.me.timbers.transform.TestUtils.mockIterable;
 import static shiver.me.timbers.transform.TestUtils.mockTransformationList;
 
-public class IndividualTransformationsTest {
+public class IterableTransformationsTest {
 
     @Test
     public void testCreate() {
 
-        new IndividualTransformations<Transformation>(mockIterable(mockTransformationList()), NULL_TRANSFORMATION);
+        new IterableTransformations<Transformation>(mockIterable(mockTransformationList()), NULL_TRANSFORMATION);
     }
 
     @Test
     public void testCreateWithEmptyIterable() {
 
         assertNoIterations(
-                new IndividualTransformations<Transformation>(Collections.<Transformation>emptySet(), NULL_TRANSFORMATION));
+                new IterableTransformations<Transformation>(Collections.<Transformation>emptySet(), NULL_TRANSFORMATION));
     }
 
     @Test
     public void testCreateWithNullTransformer() {
 
-        assertNoIterations(new IndividualTransformations<Transformation>(NULL_TRANSFORMATION));
+        assertNoIterations(new IterableTransformations<Transformation>(NULL_TRANSFORMATION));
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithNullIterable() {
 
-        new IndividualTransformations<Transformation>(null, NULL_TRANSFORMATION);
+        new IterableTransformations<Transformation>(null, NULL_TRANSFORMATION);
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithIterableAndNullNullTransformer() {
 
-        new IndividualTransformations<Transformation>(mockIterable(mockTransformationList()), null);
+        new IterableTransformations<Transformation>(mockIterable(mockTransformationList()), null);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class IndividualTransformationsTest {
         final Iterable<Transformation> iterable = mockIterable(transformationList);
 
         assertTransformationsIndices(transformationList,
-                new IndividualTransformations<Transformation>(iterable, NULL_TRANSFORMATION));
+                new IterableTransformations<Transformation>(iterable, NULL_TRANSFORMATION));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class IndividualTransformationsTest {
         final Iterable<Transformation> iterable = mockIterable(transformationList);
 
         assertTransformationsNames(transformationList,
-                new IndividualTransformations<Transformation>(iterable, NULL_TRANSFORMATION));
+                new IterableTransformations<Transformation>(iterable, NULL_TRANSFORMATION));
     }
 
     @Test
@@ -76,7 +76,7 @@ public class IndividualTransformationsTest {
         final List<Transformation> transformationList = mockTransformationList();
 
         Transformations<Transformation> transformations =
-                new IndividualTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION);
+                new IterableTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION);
 
         assertNullTransformation(transformations, -1);
         assertNullTransformation(transformations, transformationList.size());
@@ -88,7 +88,7 @@ public class IndividualTransformationsTest {
         final List<Transformation> transformationList = mockTransformationList();
 
         Transformations<Transformation> transformations =
-                new IndividualTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION);
+                new IterableTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION);
 
         assertNullTransformation(transformations, "not a Transformation");
     }
@@ -99,7 +99,7 @@ public class IndividualTransformationsTest {
         final List<Transformation> transformationList = mockTransformationList();
 
         Transformations<Transformation> transformations =
-                new IndividualTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION);
+                new IterableTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION);
 
         assertNullTransformation(transformations, null);
     }
@@ -111,7 +111,7 @@ public class IndividualTransformationsTest {
         final List<Transformation> transformationList = mockTransformationList();
 
         assertNotNull("an iterator should be returned",
-                new IndividualTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION)
+                new IterableTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION)
                         .iterator());
     }
 
@@ -123,6 +123,6 @@ public class IndividualTransformationsTest {
         final Iterable<Transformation> iterable = mockIterable(transformationList);
 
         assertCollection(transformationList,
-                new IndividualTransformations<Transformation>(iterable, NULL_TRANSFORMATION).asCollection());
+                new IterableTransformations<Transformation>(iterable, NULL_TRANSFORMATION).asCollection());
     }
 }
