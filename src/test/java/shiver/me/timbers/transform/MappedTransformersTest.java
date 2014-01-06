@@ -13,7 +13,7 @@ import static shiver.me.timbers.transform.TestUtils.assertIterableEquals;
 import static shiver.me.timbers.transform.TestUtils.assertIteratorEquals;
 import static shiver.me.timbers.transform.TestUtils.mockTransferMap;
 
-public class MapTransformersTest {
+public class MappedTransformersTest {
 
     private static final Transformer<Void, Transformation> NULL_TRANSFORMER =
             new NullTransformer<Void, Transformation>();
@@ -30,27 +30,27 @@ public class MapTransformersTest {
     @SuppressWarnings("unchecked")
     public void testCreate() {
 
-        new MapTransformers<String, Transformer<Void, Transformation>>(transformersMap, NULL_TRANSFORMER);
+        new MappedTransformers<String, Transformer<Void, Transformation>>(transformersMap, NULL_TRANSFORMER);
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithNullTransformerMap() {
 
-        new MapTransformers<String, Transformer<Void, Transformation>>(null, NULL_TRANSFORMER);
+        new MappedTransformers<String, Transformer<Void, Transformation>>(null, NULL_TRANSFORMER);
     }
 
     @Test(expected = AssertionError.class)
     @SuppressWarnings("unchecked")
     public void testCreateWithNullNullTransform() {
 
-        new MapTransformers<String, Transformer<Void, Transformation>>(transformersMap, null);
+        new MappedTransformers<String, Transformer<Void, Transformation>>(transformersMap, null);
     }
 
     @Test
     public void testGetWithIndex() {
 
         final Transformers<String, Transformer<Void, Transformation>> transformers =
-                new MapTransformers<String, Transformer<Void, Transformation>>(transformersMap, NULL_TRANSFORMER);
+                new MappedTransformers<String, Transformer<Void, Transformation>>(transformersMap, NULL_TRANSFORMER);
 
         assertCorrectIndices(new ArrayList<Object>(transformersMap.values()), transformers);
     }
@@ -59,7 +59,7 @@ public class MapTransformersTest {
     public void testGetWithInvalidIndex() {
 
         final Transformers<String, Transformer<Void, Transformation>> transformers =
-                new MapTransformers<String, Transformer<Void, Transformation>>(transformersMap, NULL_TRANSFORMER);
+                new MappedTransformers<String, Transformer<Void, Transformation>>(transformersMap, NULL_TRANSFORMER);
 
         assertEquals("the null transformer should be returned for an invalid index.", NULL_TRANSFORMER,
                 transformers.get(-1));
@@ -71,7 +71,7 @@ public class MapTransformersTest {
     public void testGetWithKey() {
 
         final Transformers<String, Transformer<Void, Transformation>> transformers =
-                new MapTransformers<String, Transformer<Void, Transformation>>(transformersMap, NULL_TRANSFORMER);
+                new MappedTransformers<String, Transformer<Void, Transformation>>(transformersMap, NULL_TRANSFORMER);
 
         assertCorrectNames(transformersMap, transformers);
     }
@@ -80,7 +80,7 @@ public class MapTransformersTest {
     public void testGetWithInvalidKey() {
 
         final Transformers<String, Transformer<Void, Transformation>> transformers =
-                new MapTransformers<String, Transformer<Void, Transformation>>(transformersMap, NULL_TRANSFORMER);
+                new MappedTransformers<String, Transformer<Void, Transformation>>(transformersMap, NULL_TRANSFORMER);
 
         assertEquals("the null transformer should be returned for an invalid key.", NULL_TRANSFORMER,
                 transformers.get("this key is invalid"));
@@ -92,7 +92,7 @@ public class MapTransformersTest {
     public void testIterator() {
 
         assertIteratorEquals(transformersMap.values().iterator(),
-                new MapTransformers<String, Transformer<Void, Transformation>>(transformersMap, NULL_TRANSFORMER)
+                new MappedTransformers<String, Transformer<Void, Transformation>>(transformersMap, NULL_TRANSFORMER)
                         .iterator());
     }
 
@@ -100,7 +100,7 @@ public class MapTransformersTest {
     public void testAsCollection() {
 
         assertIterableEquals(transformersMap.values(),
-                new MapTransformers<String, Transformer<Void, Transformation>>(transformersMap, NULL_TRANSFORMER)
+                new MappedTransformers<String, Transformer<Void, Transformation>>(transformersMap, NULL_TRANSFORMER)
                         .asCollection());
     }
 }

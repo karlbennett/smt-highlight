@@ -15,13 +15,13 @@ import static shiver.me.timbers.checks.Checks.isNotNull;
 /**
  * A collection of individual and possibly unrelated transformers.
  */
-public class MapTransformers<K, T extends Transformer> implements Transformers<K, T> {
+public class MappedTransformers<K, T extends Transformer> implements Transformers<K, T> {
 
     private final List<T> transformerList;
     private final Map<K, T> transformerMap;
     private final T nullTransformer;
 
-    public MapTransformers(Map<K, T> transformerMap, T nullTransformer) {
+    public MappedTransformers(Map<K, T> transformerMap, T nullTransformer) {
 
         assertIsNotNull(argumentIsNullMessage("transformerMap"), transformerMap);
         assertIsNotNull(argumentIsNullMessage("nullTransformer"), nullTransformer);
