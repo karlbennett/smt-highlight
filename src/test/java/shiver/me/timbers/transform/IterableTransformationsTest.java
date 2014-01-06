@@ -3,17 +3,20 @@ package shiver.me.timbers.transform;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-import static org.junit.Assert.assertNotNull;
 import static shiver.me.timbers.transform.NullTransformation.NULL_TRANSFORMATION;
-import static shiver.me.timbers.transform.TestUtils.assertCollection;
+import static shiver.me.timbers.transform.TestUtils.assertCorrectIndices;
+import static shiver.me.timbers.transform.TestUtils.assertCorrectNames;
+import static shiver.me.timbers.transform.TestUtils.assertIterableEquals;
+import static shiver.me.timbers.transform.TestUtils.assertIteratorEquals;
 import static shiver.me.timbers.transform.TestUtils.assertNoIterations;
 import static shiver.me.timbers.transform.TestUtils.assertNullTransformation;
-import static shiver.me.timbers.transform.TestUtils.assertTransformationsIndices;
-import static shiver.me.timbers.transform.TestUtils.assertTransformationsNames;
 import static shiver.me.timbers.transform.TestUtils.mockIterable;
 import static shiver.me.timbers.transform.TestUtils.mockTransformationList;
+import static shiver.me.timbers.transform.TestUtils.mockTransformationMap;
 
 public class IterableTransformationsTest {
 
@@ -55,18 +58,19 @@ public class IterableTransformationsTest {
 
         final Iterable<Transformation> iterable = mockIterable(transformationList);
 
-        assertTransformationsIndices(transformationList,
+        assertCorrectIndices(transformationList,
                 new IterableTransformations<Transformation>(iterable, NULL_TRANSFORMATION));
     }
 
     @Test
     public void testGetWithName() {
 
-        final List<Transformation> transformationList = mockTransformationList();
+        final Map<String, Transformation> transformationMap = mockTransformationMap();
 
-        final Iterable<Transformation> iterable = mockIterable(transformationList);
+        final Iterable<Transformation> iterable =
+                mockIterable(new LinkedList<Transformation>(transformationMap.values()));
 
-        assertTransformationsNames(transformationList,
+        assertCorrectNames(transformationMap,
                 new IterableTransformations<Transformation>(iterable, NULL_TRANSFORMATION));
     }
 
@@ -106,11 +110,11 @@ public class IterableTransformationsTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testIteratorIsNotNull() {
+    public void testIterator() {
 
         final List<Transformation> transformationList = mockTransformationList();
 
-        assertNotNull("an iterator should be returned",
+        assertIteratorEquals(transformationList.iterator(),
                 new IterableTransformations<Transformation>(mockIterable(transformationList), NULL_TRANSFORMATION)
                         .iterator());
     }
@@ -122,7 +126,7 @@ public class IterableTransformationsTest {
 
         final Iterable<Transformation> iterable = mockIterable(transformationList);
 
-        assertCollection(transformationList,
+        assertIterableEquals(transformationList,
                 new IterableTransformations<Transformation>(iterable, NULL_TRANSFORMATION).asCollection());
     }
 }

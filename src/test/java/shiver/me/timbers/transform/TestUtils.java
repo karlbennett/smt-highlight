@@ -1,12 +1,16 @@
 package shiver.me.timbers.transform;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static java.util.Arrays.fill;
 import static java.util.Collections.unmodifiableList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -58,7 +62,7 @@ public final class TestUtils {
         } else {
 
             final Boolean[] returns = new Boolean[elements.size()];
-            Arrays.fill(returns, true);
+            fill(returns, true);
             returns[returns.length - 1] = false;
 
             when(iterator.hasNext()).thenReturn(true, returns);
@@ -71,6 +75,23 @@ public final class TestUtils {
         when(transformationIterable.iterator()).thenReturn(iterator);
 
         return transformationIterable;
+    }
+
+    public static Map<String, Transformation> mockTransformationMap() {
+
+        return mockTransformationMap(NAMES);
+    }
+
+    public static Map<String, Transformation> mockTransformationMap(Collection<String> names) {
+
+        final Map<String, Transformation> transformationMap = new HashMap<String, Transformation>(names.size());
+
+        for (Transformation transformation : mockTransformationList(names)) {
+
+            transformationMap.put(transformation.getName(), transformation);
+        }
+
+        return transformationMap;
     }
 
     public static List<Transformation> mockTransformationList() {
@@ -94,6 +115,28 @@ public final class TestUtils {
         return transformations;
     }
 
+    public static <I, T extends Transformation> Map<String, Transformer<I, T>> mockTransferMap() {
+
+        return mockTransferMap(NAMES);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <I, T extends Transformation> Map<String, Transformer<I, T>> mockTransferMap(
+            Collection<String> names) {
+
+        final Map<String, Transformer<I, T>> transformers = new HashMap<String, Transformer<I, T>>(names.size());
+
+        Transformer<I, T> transformer;
+        for (String name : names) {
+
+            transformer = mock(Transformer.class);
+
+            transformers.put(name, transformer);
+        }
+
+        return transformers;
+    }
+
     public static void assertNoIterations(Transformations<Transformation> transformations) {
 
         for (Transformation transformation : transformations) {
@@ -103,23 +146,20 @@ public final class TestUtils {
         }
     }
 
-    public static void assertTransformationsIndices(List<Transformation> transformationList,
-                                                    Transformations transformations) {
+    public static void assertCorrectIndices(List expected, Container actual) {
 
-        for (int i = 0; i < transformationList.size(); i++) {
+        for (int i = 0; i < expected.size(); i++) {
 
-            assertEquals("Transformation " + NAMES.get(i) + " should be returned for index " + i,
-                    transformationList.get(i), transformations.get(i));
+            assertEquals("element at index \"" + i + "\" should be correct.", expected.get(i), actual.get(i));
         }
     }
 
-    public static void assertTransformationsNames(List<Transformation> transformationList,
-                                                  Transformations<Transformation> transformations) {
+    public static void assertCorrectNames(Map<String, ?> expected, Container<String, ?> actual) {
 
-        for (int i = 0; i < transformationList.size(); i++) {
+        for (String name : NAMES) {
 
-            assertEquals("Transformation " + NAMES.get(i) + " should be returned for index " + i,
-                    transformationList.get(i), transformations.get(NAMES.get(i)));
+            assertEquals("element with name " + name + " should be returned correctly.", expected.get(name),
+                    actual.get(name));
         }
     }
 
@@ -135,16 +175,40 @@ public final class TestUtils {
                 transformations.get(name));
     }
 
-    public static void assertCollection(List<Transformation> transformationList,
-                                        Collection<Transformation> transformations) {
+    public static void assertIterableEquals(Iterable expected, Iterable actual) {
 
-        int i = 0;
-        for (Transformation transformation : transformations) {
+        assertIteratorEquals(expected.iterator(), actual.iterator());
+    }
 
-            assertEquals("Transformation " + NAMES.get(i) + " should be correct at index " + i,
-                    transformationList.get(i), transformation);
+    public static void assertIteratorEquals(Iterator expected, Iterator actual) {
 
-            i++;
+        final List expectedList = iteratorAsList(expected);
+        Collections.sort(expectedList, new HashCodeComparator());
+
+        final List actualList = iteratorAsList(actual);
+        Collections.sort(actualList, new HashCodeComparator());
+
+        assertEquals("both iterators should be equal.", expectedList, actualList);
+    }
+
+    private static List iteratorAsList(Iterator iterator) {
+
+        final List<Object> list = new ArrayList<Object>();
+
+        while (iterator.hasNext()) {
+
+            list.add(iterator.next());
+        }
+
+        return list;
+    }
+
+    private static class HashCodeComparator implements Comparator {
+
+        @Override
+        public int compare(Object first, Object second) {
+
+            return first.hashCode() - second.hashCode();
         }
     }
 }
