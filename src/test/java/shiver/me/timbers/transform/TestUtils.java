@@ -1,5 +1,7 @@
 package shiver.me.timbers.transform;
 
+import shiver.me.timbers.transform.iterable.IterableTransformations;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
