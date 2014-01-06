@@ -1,6 +1,7 @@
 package shiver.me.timbers.transform;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,10 +10,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.AbstractMap.SimpleEntry;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.fill;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Map.Entry;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -115,23 +120,46 @@ public final class TestUtils {
         return transformations;
     }
 
-    public static <I, T extends Transformation> Map<String, Transformer<I, T>> mockTransferMap() {
+    public static <I, T extends Transformation> Map<String, Transformer<I, T>> mockTransformerMap() {
 
-        return mockTransferMap(NAMES);
+        return mockTransformerMap(NAMES);
     }
 
     @SuppressWarnings("unchecked")
-    public static <I, T extends Transformation> Map<String, Transformer<I, T>> mockTransferMap(
+    public static <I, T extends Transformation> Map<String, Transformer<I, T>> mockTransformerMap(
             Collection<String> names) {
 
-        final Map<String, Transformer<I, T>> transformers = new HashMap<String, Transformer<I, T>>(names.size());
+        final Iterator<String> iterator = names.iterator();
 
-        Transformer<I, T> transformer;
-        for (String name : names) {
+        return mockMap(new TransformerMapIterable(iterator));
+    }
 
-            transformer = mock(Transformer.class);
+    @SuppressWarnings("unchecked")
+    public static Map<String, String> mockNameMap() {
 
-            transformers.put(name, transformer);
+        int index = 0;
+
+        return mockMap(Arrays.<Entry<String, String>>asList(
+                new SimpleEntry<String, String>(NAMES.get(index++), "1"),
+                new SimpleEntry<String, String>(NAMES.get(index++), "2"),
+                new SimpleEntry<String, String>(NAMES.get(index++), "3"),
+                new SimpleEntry<String, String>(NAMES.get(index++), "4"),
+                new SimpleEntry<String, String>(NAMES.get(index++), "5"),
+                new SimpleEntry<String, String>(NAMES.get(index++), "6"),
+                new SimpleEntry<String, String>(NAMES.get(index++), "7"),
+                new SimpleEntry<String, String>(NAMES.get(index++), "8"),
+                new SimpleEntry<String, String>(NAMES.get(index++), "9"),
+                new SimpleEntry<String, String>(NAMES.get(index), "10")
+        ));
+    }
+
+    public static <K, V> Map<K, V> mockMap(Iterable<Entry<K, V>> entries) {
+
+        final Map<K, V> transformers = new HashMap<K, V>();
+
+        for (Entry<K, V> entry : entries) {
+
+            transformers.put(entry.getKey(), entry.getValue());
         }
 
         return transformers;
@@ -146,11 +174,11 @@ public final class TestUtils {
         }
     }
 
-    public static void assertCorrectIndices(List expected, Container actual) {
+    public static <T> void assertCorrectIndices(List<T> expected, Container<?, T> actual) {
 
         for (int i = 0; i < expected.size(); i++) {
 
-            assertEquals("element at index \"" + i + "\" should be correct.", expected.get(i), actual.get(i));
+            assertThat("element at index \"" + i + "\" should be correct.", expected, hasItem(actual.get(i)));
         }
     }
 
@@ -201,6 +229,43 @@ public final class TestUtils {
         }
 
         return list;
+    }
+
+    private static class TransformerMapIterable<I, T extends Transformation>
+            implements Iterable<Entry<String, Transformer<I, T>>> {
+
+        private final Iterator<String> names;
+
+        private TransformerMapIterable(Iterator<String> names) {
+
+            this.names = names;
+        }
+
+        @Override
+        public Iterator<Entry<String, Transformer<I, T>>> iterator() {
+
+            return new Iterator<Entry<String, Transformer<I, T>>>() {
+
+                @Override
+                public boolean hasNext() {
+
+                    return names.hasNext();
+                }
+
+                @SuppressWarnings("unchecked")
+                @Override
+                public Entry<String, Transformer<I, T>> next() {
+
+                    return new SimpleEntry<String, Transformer<I, T>>(names.next(), mock(Transformer.class));
+                }
+
+                @Override
+                public void remove() {
+
+                    names.remove();
+                }
+            };
+        }
     }
 
     private static class HashCodeComparator implements Comparator {

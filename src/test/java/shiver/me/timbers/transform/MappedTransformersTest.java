@@ -11,7 +11,7 @@ import static shiver.me.timbers.transform.TestUtils.assertCorrectIndices;
 import static shiver.me.timbers.transform.TestUtils.assertCorrectNames;
 import static shiver.me.timbers.transform.TestUtils.assertIterableEquals;
 import static shiver.me.timbers.transform.TestUtils.assertIteratorEquals;
-import static shiver.me.timbers.transform.TestUtils.mockTransferMap;
+import static shiver.me.timbers.transform.TestUtils.mockTransformerMap;
 
 public class MappedTransformersTest {
 
@@ -23,7 +23,7 @@ public class MappedTransformersTest {
     @Before
     public void setUp() {
 
-        transformersMap = mockTransferMap();
+        transformersMap = mockTransformerMap();
     }
 
     @Test
@@ -52,7 +52,7 @@ public class MappedTransformersTest {
         final Transformers<String, Transformer<Void, Transformation>> transformers =
                 new MappedTransformers<String, Transformer<Void, Transformation>>(transformersMap, NULL_TRANSFORMER);
 
-        assertCorrectIndices(new ArrayList<Object>(transformersMap.values()), transformers);
+        assertCorrectIndices(new ArrayList<Transformer<Void, Transformation>>(transformersMap.values()), transformers);
     }
 
     @Test
