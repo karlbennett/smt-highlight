@@ -178,10 +178,13 @@ public final class TestUtils {
 
     public static <T> void assertCorrectIndices(List<T> expected, Container<?, T> actual) {
 
-        for (int i = 0; i < expected.size(); i++) {
+        int i = 0;
+        for (; i < expected.size(); i++) {
 
             assertThat("element at index \"" + i + "\" should be correct.", expected, hasItem(actual.get(i)));
         }
+
+        assertEquals("the correct number of elements should be found.", expected.size(), i);
     }
 
     public static void assertCorrectNames(Map<String, ?> expected, Container<String, ?> actual) {
