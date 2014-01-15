@@ -15,7 +15,8 @@ import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
  *
  * @author Karl Bennett
  */
-public class WrappedFileTransformer<T extends Transformation> implements CompositeFileTransformer<T> {
+public class WrappedFileTransformer<T extends Transformation> extends AbstractWrappedTansformer<File, T>
+        implements CompositeFileTransformer<T> {
 
     private final FileTransformer<T> transformer;
     private final Transformations<T> transformations;
@@ -28,6 +29,7 @@ public class WrappedFileTransformer<T extends Transformation> implements Composi
      * @param transformations the transformations to apply.
      */
     public WrappedFileTransformer(FileTransformer<T> transformer, Transformations<T> transformations) {
+        super(transformer);
 
         assertIsNotNull(argumentIsNullMessage("transformer"), transformer);
         assertIsNotNull(argumentIsNullMessage("transformations"), transformations);

@@ -1,9 +1,11 @@
 package shiver.me.timbers.transform.stream;
 
+import shiver.me.timbers.transform.AbstractTransformer;
 import shiver.me.timbers.transform.Transformation;
 import shiver.me.timbers.transform.Transformations;
 import shiver.me.timbers.transform.string.StringTransformer;
 
+import javax.activation.MimeType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -18,13 +20,15 @@ import static shiver.me.timbers.checks.Checks.isNotNull;
  * This {@link StreamTransformer} implementation provides some convenience logic for presenting a
  * {@link shiver.me.timbers.transform.string.StringTransformer} as a {@link StreamTransformer}.
  */
-public class StringStreamTransformer<T extends Transformation> implements StreamTransformer<T> {
+public class StringStreamTransformer<T extends Transformation> extends AbstractTransformer<InputStream, T>
+        implements StreamTransformer<T> {
 
     private static final int STREAM_COPY_BUFFER_SIZE = 1024 * 4; // This value was taken from commons-io.
 
     private final StringTransformer<T> transformer;
 
-    public StringStreamTransformer(StringTransformer<T> transformer) {
+    public StringStreamTransformer(MimeType mimeType, StringTransformer<T> transformer) {
+        super(mimeType);
 
         assertIsNotNull(argumentIsNullMessage("transformer"), transformer);
 

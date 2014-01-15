@@ -9,10 +9,10 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static shiver.me.timbers.transform.TestUtils.assertCorrectIndices;
-import static shiver.me.timbers.transform.TestUtils.assertCorrectNames;
 import static shiver.me.timbers.transform.TestUtils.assertIterableEquals;
 import static shiver.me.timbers.transform.TestUtils.assertIteratorEquals;
-import static shiver.me.timbers.transform.TestUtils.mockNameMap;
+import static shiver.me.timbers.transform.TransformationTestUtils.assertCorrectNames;
+import static shiver.me.timbers.transform.TransformationTestUtils.mockNameMap;
 
 public class MappedContainerTest {
 

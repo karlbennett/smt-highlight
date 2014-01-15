@@ -8,6 +8,7 @@ import shiver.me.timbers.transform.Transformations;
 import shiver.me.timbers.transform.VerifyStream;
 import shiver.me.timbers.transform.stream.StreamTransformer;
 
+import javax.activation.MimeType;
 import java.io.File;
 import java.io.InputStream;
 
@@ -40,7 +41,7 @@ public class StreamFileTransformerTest {
         file = testFile();
         stream = testFileInputStream();
 
-        fileTransformer = new StreamFileTransformer<Transformation>(mockTransformer);
+        fileTransformer = new StreamFileTransformer<Transformation>(mock(MimeType.class), mockTransformer);
     }
 
     @After
@@ -53,13 +54,19 @@ public class StreamFileTransformerTest {
     @SuppressWarnings("unchecked")
     public void testCreate() {
 
-        new StreamFileTransformer<Transformation>(mock(StreamTransformer.class));
+        new StreamFileTransformer<Transformation>(mock(MimeType.class), mockTransformer);
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithNullTransformer() {
 
-        new StreamFileTransformer<Transformation>(null);
+        new StreamFileTransformer<Transformation>(mock(MimeType.class), null);
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testCreateWithNullMimeType() {
+
+        new StreamFileTransformer<Transformation>(null, mockTransformer);
     }
 
     @Test

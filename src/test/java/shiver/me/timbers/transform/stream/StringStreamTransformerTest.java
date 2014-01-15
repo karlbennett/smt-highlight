@@ -7,6 +7,7 @@ import shiver.me.timbers.transform.Transformation;
 import shiver.me.timbers.transform.Transformations;
 import shiver.me.timbers.transform.string.StringTransformer;
 
+import javax.activation.MimeType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -36,7 +37,7 @@ public class StringStreamTransformerTest {
         stream = testFileInputStream();
         string = testFileText();
 
-        streamTransformer = new StringStreamTransformer<Transformation>(mockTransformer);
+        streamTransformer = new StringStreamTransformer<Transformation>(mock(MimeType.class), mockTransformer);
     }
 
     @After
@@ -49,13 +50,19 @@ public class StringStreamTransformerTest {
     @SuppressWarnings("unchecked")
     public void testCreate() {
 
-        new StringStreamTransformer<Transformation>(mock(StringTransformer.class));
+        new StringStreamTransformer<Transformation>(mock(MimeType.class), mock(StringTransformer.class));
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithNullTransformer() {
 
-        new StringStreamTransformer<Transformation>(null);
+        new StringStreamTransformer<Transformation>(mock(MimeType.class), null);
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testCreateWithNullMimeType() {
+
+        new StringStreamTransformer<Transformation>(null, mockTransformer);
     }
 
     @Test

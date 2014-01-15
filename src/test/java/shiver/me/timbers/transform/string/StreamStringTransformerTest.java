@@ -8,6 +8,7 @@ import shiver.me.timbers.transform.Transformations;
 import shiver.me.timbers.transform.VerifyStream;
 import shiver.me.timbers.transform.stream.StreamTransformer;
 
+import javax.activation.MimeType;
 import java.io.InputStream;
 
 import static org.mockito.Matchers.any;
@@ -39,7 +40,7 @@ public class StreamStringTransformerTest {
         stream = testFileInputStream();
         string = testFileText();
 
-        stringTransformer = new StreamStringTransformer<Transformation>(mockTransformer);
+        stringTransformer = new StreamStringTransformer<Transformation>(mock(MimeType.class), mockTransformer);
     }
 
     @After
@@ -52,13 +53,19 @@ public class StreamStringTransformerTest {
     @SuppressWarnings("unchecked")
     public void testCreate() {
 
-        new StreamStringTransformer<Transformation>(mock(StreamTransformer.class));
+        new StreamStringTransformer<Transformation>(mock(MimeType.class), mockTransformer);
     }
 
     @Test(expected = AssertionError.class)
     public void testCreateWithNullTransformer() {
 
-        new StreamStringTransformer<Transformation>(null);
+        new StreamStringTransformer<Transformation>(mock(MimeType.class), null);
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testCreateWithNullMimeType() {
+
+        new StreamStringTransformer<Transformation>(null, mockTransformer);
     }
 
     @Test

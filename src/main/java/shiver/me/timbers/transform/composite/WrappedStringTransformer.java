@@ -11,7 +11,8 @@ import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
  * This {@link shiver.me.timbers.transform.composite.CompositeStringTransformer} implementation provides some convenience logic for storing
  * {@link shiver.me.timbers.transform.Transformations} against a {@link shiver.me.timbers.transform.string.StringTransformer}.
  */
-public class WrappedStringTransformer<T extends Transformation> implements CompositeStringTransformer<T> {
+public class WrappedStringTransformer<T extends Transformation> extends AbstractWrappedTansformer<String, T>
+        implements CompositeStringTransformer<T> {
 
     private final StringTransformer<T> transformer;
     private final Transformations<T> transformations;
@@ -24,6 +25,7 @@ public class WrappedStringTransformer<T extends Transformation> implements Compo
      * @param transformations the transformations to apply.
      */
     public WrappedStringTransformer(StringTransformer<T> transformer, Transformations<T> transformations) {
+        super(transformer);
 
         assertIsNotNull(argumentIsNullMessage("transformer"), transformer);
         assertIsNotNull(argumentIsNullMessage("transformations"), transformations);

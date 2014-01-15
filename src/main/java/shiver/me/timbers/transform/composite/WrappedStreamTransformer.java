@@ -15,7 +15,8 @@ import static shiver.me.timbers.asserts.Asserts.assertIsNotNull;
  *
  * @author Karl Bennett
  */
-public class WrappedStreamTransformer<T extends Transformation> implements CompositeStreamTransformer<T> {
+public class WrappedStreamTransformer<T extends Transformation> extends AbstractWrappedTansformer<InputStream, T>
+        implements CompositeStreamTransformer<T> {
 
     private final StreamTransformer<T> transformer;
     private final Transformations<T> transformations;
@@ -28,6 +29,7 @@ public class WrappedStreamTransformer<T extends Transformation> implements Compo
      * @param transformations the transformations to apply.
      */
     public WrappedStreamTransformer(StreamTransformer<T> transformer, Transformations<T> transformations) {
+        super(transformer);
 
         assertIsNotNull(argumentIsNullMessage("transformer"), transformer);
         assertIsNotNull(argumentIsNullMessage("transformations"), transformations);

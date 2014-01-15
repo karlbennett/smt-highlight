@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static shiver.me.timbers.transform.FileUtils.testFile;
 import static shiver.me.timbers.transform.FileUtils.testFileText;
-import static shiver.me.timbers.transform.TestUtils.EMPTY_TRANSFORMATIONS;
+import static shiver.me.timbers.transform.TransformationTestUtils.EMPTY_TRANSFORMATIONS;
 
 public class NullCompositeFileTransformerTest {
 

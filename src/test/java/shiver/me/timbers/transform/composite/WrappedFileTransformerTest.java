@@ -7,12 +7,14 @@ import shiver.me.timbers.transform.Transformation;
 import shiver.me.timbers.transform.Transformations;
 import shiver.me.timbers.transform.file.FileTransformer;
 
+import javax.activation.MimeType;
 import java.io.File;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 public class WrappedFileTransformerTest {
 
@@ -26,7 +28,11 @@ public class WrappedFileTransformerTest {
     @SuppressWarnings("unchecked")
     public void setUp() {
 
+        final MimeType mimeType = mock(MimeType.class);
+
         mockTransformer = mock(FileTransformer.class);
+        when(mockTransformer.getMimeType()).thenReturn(mimeType);
+
         transformations = mock(Transformations.class);
         file = mock(File.class);
 
@@ -36,6 +42,7 @@ public class WrappedFileTransformerTest {
     @After
     public void tearDown() throws Exception {
 
+        verify(mockTransformer, times(1)).getMimeType();
         verifyNoMoreInteractions(mockTransformer);
     }
 
@@ -43,7 +50,7 @@ public class WrappedFileTransformerTest {
     @SuppressWarnings("unchecked")
     public void testCreate() {
 
-        new WrappedFileTransformer<Transformation>(mock(FileTransformer.class), transformations);
+        new WrappedFileTransformer<Transformation>(fileTransformer, transformations);
     }
 
     @Test(expected = AssertionError.class)
@@ -53,9 +60,10 @@ public class WrappedFileTransformerTest {
     }
 
     @Test(expected = AssertionError.class)
+    @SuppressWarnings("unchecked")
     public void testCreateWithNullTransformations() {
 
-        new WrappedFileTransformer<Transformation>(mockTransformer, null);
+        new WrappedFileTransformer<Transformation>(fileTransformer, null);
     }
 
     @Test

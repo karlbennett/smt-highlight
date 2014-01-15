@@ -1,5 +1,6 @@
 package shiver.me.timbers.transform.file;
 
+import shiver.me.timbers.transform.NullTransformer;
 import shiver.me.timbers.transform.Transformation;
 import shiver.me.timbers.transform.stream.NullStreamTransformer;
 
@@ -9,6 +10,6 @@ import shiver.me.timbers.transform.stream.NullStreamTransformer;
 public class NullFileTransformer<T extends Transformation> extends StreamFileTransformer<T> {
 
     public NullFileTransformer() {
-        super(new NullStreamTransformer<T>());
+        super(NullTransformer.TEXT_PLAIN, new NullStreamTransformer<T>());
     }
 }
