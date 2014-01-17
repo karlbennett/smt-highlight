@@ -28,20 +28,34 @@ public class MappedContainerTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testCreate() {
+    public void testCreateWithNullValue() {
+
+        new MappedContainer<String, String>(NULL_VALUE);
+    }
+
+    @Test(expected = AssertionError.class)
+    @SuppressWarnings("unchecked")
+    public void testCreateWithNullNullValue() {
+
+        new MappedContainer<String, String>(null);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testCreateWithTransformerMapAndNullValue() {
 
         new MappedContainer<String, String>(map, NULL_VALUE);
     }
 
     @Test(expected = AssertionError.class)
-    public void testCreateWithNullTransformerMap() {
+    public void testCreateWithNullTransformerMapAndNullValue() {
 
         new MappedContainer<String, String>(null, NULL_VALUE);
     }
 
     @Test(expected = AssertionError.class)
     @SuppressWarnings("unchecked")
-    public void testCreateWithNullNullTransform() {
+    public void testCreateWithTransformerMapAndNullNullTransform() {
 
         new MappedContainer<String, String>(map, null);
     }

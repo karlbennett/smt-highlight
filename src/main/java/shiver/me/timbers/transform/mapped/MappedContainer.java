@@ -4,6 +4,7 @@ import shiver.me.timbers.transform.Container;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,6 +23,11 @@ public class MappedContainer<K, V> implements Container<K, V> {
     private final List<V> list;
     private final Map<K, V> map;
     private final V nullTransformer;
+
+    public MappedContainer(V nullValue) {
+
+        this(Collections.<K, V>emptyMap(), nullValue);
+    }
 
     public MappedContainer(Map<K, V> map, V nullValue) {
 
