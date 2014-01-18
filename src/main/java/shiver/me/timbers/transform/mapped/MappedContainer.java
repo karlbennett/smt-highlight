@@ -42,10 +42,10 @@ public class MappedContainer<K, V> implements Container<K, V> {
     @Override
     public V get(int index) {
 
-        return isValidIndex(index) ? list.get(index) : nullTransformer;
+        return isValidIndex(list, index) ? list.get(index) : nullTransformer;
     }
 
-    private boolean isValidIndex(int index) {
+    public static boolean isValidIndex(List list, int index) {
 
         return 0 <= index && list.size() > index;
     }

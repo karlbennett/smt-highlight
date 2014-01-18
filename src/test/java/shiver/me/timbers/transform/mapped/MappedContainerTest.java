@@ -5,14 +5,19 @@ import org.junit.Test;
 import shiver.me.timbers.transform.Container;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static shiver.me.timbers.transform.TestUtils.assertCorrectIndices;
 import static shiver.me.timbers.transform.TestUtils.assertIterableEquals;
 import static shiver.me.timbers.transform.TestUtils.assertIteratorEquals;
 import static shiver.me.timbers.transform.TransformationTestUtils.assertCorrectNames;
 import static shiver.me.timbers.transform.TransformationTestUtils.mockNameMap;
+import static shiver.me.timbers.transform.mapped.MappedContainer.isValidIndex;
 
 public class MappedContainerTest {
 
@@ -58,6 +63,34 @@ public class MappedContainerTest {
     public void testCreateWithTransformerMapAndNullNullTransform() {
 
         new MappedContainer<String, String>(map, null);
+    }
+
+    @Test
+    public void testIsValidIndexWithValidIndices() throws Exception {
+
+        final List<Integer> list = asList(1, 2, 3, 4, 5);
+
+        assertTrue("index should be valid", isValidIndex(list, 0));
+        assertTrue("index should be valid", isValidIndex(list, 1));
+        assertTrue("index should be valid", isValidIndex(list, 2));
+        assertTrue("index should be valid", isValidIndex(list, 3));
+        assertTrue("index should be valid", isValidIndex(list, 4));
+    }
+
+    @Test
+    public void testIsValidIndexWithInvalidIndices() throws Exception {
+
+        final List<Integer> list = asList(1, 2, 3, 4, 5);
+
+        assertFalse("index should be invalid", isValidIndex(list, -1));
+        assertFalse("index should be invalid", isValidIndex(list, list.size()));
+        assertFalse("index should be invalid", isValidIndex(list, list.size() + 1));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testIsValidIndexWithNullList() throws Exception {
+
+        isValidIndex(null, 0);
     }
 
     @Test
