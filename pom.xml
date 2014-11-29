@@ -19,7 +19,7 @@
 
     <description>A simple API for adding transformations to source code.</description>
 
-    <url>http://karlbennett.github.io/${project.artifactId}/</url>
+    <url>http://shiver-me-timbers.github.io/${project.artifactId}/</url>
 
     <build>
         <plugins>
@@ -81,7 +81,7 @@
     </dependencies>
 
     <scm>
-        <developerConnection>scm:git:git@github.com:karlbennett/${project.artifactId}.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:shiver-me-timbers/${project.artifactId}.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 </project>
